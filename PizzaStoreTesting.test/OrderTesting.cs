@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Xunit;
 
 namespace PizzaStoreTesting.test
 {
-    class OrderTesting
+    public class OrderTesting
     {
         // has a location
         // has a user

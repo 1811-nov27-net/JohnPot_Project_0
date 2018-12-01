@@ -2,7 +2,7 @@
 
 namespace PizzaStoreLibrary.library
 {
-    public class Store
+    public class PizzaStore
     {
 
     }

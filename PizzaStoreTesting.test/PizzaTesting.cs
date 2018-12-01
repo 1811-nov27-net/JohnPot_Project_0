@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Xunit;
 
 namespace PizzaStoreTesting.test
 {
-    class PizzaTesting
+    public class PizzaTesting
     {
         // Define own pizza logic + tests
     }

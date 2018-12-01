@@ -1,5 +1,6 @@
-﻿using PizzaStoreLibrary.lib;
+﻿using PizzaStoreLibrary.library;
 using System;
+using System.Collections.Generic;
 
 namespace PizzaStoreInterface.UI
 {
@@ -10,8 +11,8 @@ namespace PizzaStoreInterface.UI
     {
         static void Main(string[] args)
         {
-            PizzaStore lib = new PizzaStore();
-            Console.WriteLine("Hello World!");
+            string[] stest = new string[] { };
+            Console.WriteLine(stest?.Length);
         }
     }
 }

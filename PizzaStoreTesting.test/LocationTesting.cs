@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Xunit;
 
 namespace PizzaStoreTesting.test
 {
-    class LocationTesting
+    public class LocationTesting
     {
         // has an inventory of pizza ingredients
         // inventory decreases when orders are accepted
