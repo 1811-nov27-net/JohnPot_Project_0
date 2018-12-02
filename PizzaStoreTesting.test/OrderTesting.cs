@@ -22,7 +22,7 @@ namespace PizzaStoreTesting.test
                     new string[] { "John", "Pot" },
                     Name.InvalidLocation)]
         public void OrderHasLocationAfterCreation(
-            string location, 
+            string location,
             string[] user,
             string expected)
         {
@@ -36,12 +36,12 @@ namespace PizzaStoreTesting.test
             // Order created using Location class
             Location l = new Location(location);
             Order order2 = new Order(user, location);
-  
+
 
             // Act
             string actualLocationOrder1 = order1.Location.Name.Location;
             string actualLocationOrder2 = order2.Location.Name.Location;
-            
+
             // Assert
             Assert.Equal(expected, actualLocationOrder1);
             //Assert.Equal(expected, actualLocationOrder2.Name.Location);
@@ -54,10 +54,10 @@ namespace PizzaStoreTesting.test
 
         [Theory]
         // Passing in valid user data
-        [InlineData(new string[] { "John", "Pot" }, 
+        [InlineData(new string[] { "John", "Pot" },
                     new string[] { "John", "Pot" })]
         // Pass in first name only
-        [InlineData(new string[] { "John"},
+        [InlineData(new string[] { "John" },
                     new string[] { "Invalid Name", "Invalid Name" })]
         // Pass in too many names
         [InlineData(new string[] { "John", "Thomas", "Pot" },
@@ -74,7 +74,7 @@ namespace PizzaStoreTesting.test
         public void OrderHasUserAfterCreation(string[] user, string[] expected)
         {
             // Arrange
-            
+
             // Create order using strings
             Order order1 = new Order(user);
             // Create order using User class
@@ -110,29 +110,29 @@ namespace PizzaStoreTesting.test
         // Providing valid information. A user and 3 pizzas
         [InlineData(new string[] { "John", "Pot" },
                     3,
-                    new string[] { "Peperoni", "Olives" },
+                    new string[] { "Pepperoni", "Olives" },
                     new string[] { "Cheese", "Olives" },
                     new string[] { "Olives" })]
         // Passing in only one pizza
         [InlineData(new string[] { "John", "Pot" },
                     1,
-                    new string[] { "Peperoni", "Olives" })]
+                    new string[] { "Pepperoni", "Olives" })]
         // Too many pizzas (13 total)
         [InlineData(new string[] { "John", "Pot" },
                     12,
-                    new string[] { "Peperoni", "Olives" },
-                    new string[] { "Peperoni", "Olives" },
-                    new string[] { "Peperoni", "Olives" },
-                    new string[] { "Peperoni", "Olives" },
-                    new string[] { "Peperoni", "Olives" },
-                    new string[] { "Peperoni", "Olives" },
-                    new string[] { "Peperoni", "Olives" },
-                    new string[] { "Peperoni", "Olives" },
-                    new string[] { "Peperoni", "Olives" },
-                    new string[] { "Peperoni", "Olives" },
-                    new string[] { "Peperoni", "Olives" },
-                    new string[] { "Peperoni", "Olives" },
-                    new string[] { "Peperoni", "Olives" })]
+                    new string[] { "Pepperoni", "Olives" },
+                    new string[] { "Pepperoni", "Olives" },
+                    new string[] { "Pepperoni", "Olives" },
+                    new string[] { "Pepperoni", "Olives" },
+                    new string[] { "Pepperoni", "Olives" },
+                    new string[] { "Pepperoni", "Olives" },
+                    new string[] { "Pepperoni", "Olives" },
+                    new string[] { "Pepperoni", "Olives" },
+                    new string[] { "Pepperoni", "Olives" },
+                    new string[] { "Pepperoni", "Olives" },
+                    new string[] { "Pepperoni", "Olives" },
+                    new string[] { "Pepperoni", "Olives" },
+                    new string[] { "Pepperoni", "Olives" })]
         // Passing in bad pizzas
         [InlineData(new string[] { "John", "Pot" },
                     0,
@@ -147,14 +147,14 @@ namespace PizzaStoreTesting.test
         {
             // Arrange
             Order order1 = new Order(user);
-            if(pizzas != null)
+            if (pizzas != null)
             {
                 foreach (string[] pizza in pizzas)
                 {
                     order1.AddPizzaToOrder(pizza);
                 }
             }
-            
+
             // Act
             int actualNumberOfPizzas = order1.PizzaList.Count;
 
@@ -167,14 +167,47 @@ namespace PizzaStoreTesting.test
 
         #region Order Cost
 
-        // total value cannot exceed $500
-        
+
         [Theory]
+        // One 1 topping pizza
         [InlineData(new string[] { "John", "Pot" },
-                    25,
-                    new string[] { "Cheese", "Peperoni" },
+                    11.00f,
+                    new string[] { "Pepperoni" })]
+        // One 2 topping pizza
+        [InlineData(new string[] { "John", "Pot" },
+                    12.00f,
+                    new string[] { "Pepperoni", "Olives" })]
+        // Testing two 1 topping pizzas
+        [InlineData(new string[] { "John", "Pot" },
+                    22.00f,
+                    new string[] { "Pepperoni" },
                     new string[] { "Olives" })]
-        public void CostOfOrderIsCalculatedCorrectly(string[] user, int expectedCost, params string[][] pizzas)
+        // One 1 topping and one 2 topping
+        [InlineData(new string[] { "John", "Pot" },
+                    23.00f,
+                    new string[] { "Pepperoni" },
+                    new string[] { "Olives", "Pepperoni" })]
+        // One cheese pizza (Contains decimals => 0.50)
+        [InlineData(new string[] { "John", "Pot" },
+                    10.50f,
+                    new string[] { "Cheese" })]
+        // One broken pizza and one valid one
+        [InlineData(new string[] { "John", "Pot" },
+                    11.00f,
+                    new string[] { "Pepperoni" },
+                    new string[] { "" })]
+        [InlineData(new string[] { "John", "Pot" },
+                    11.00f,
+                    new string[] { "Pepperoni" },
+                    new string[] { null },
+                    new string[] { "" })]
+        // Only invalid pizzas
+        [InlineData(new string[] { "John", "Pot" },
+                    0.0f,
+                    new string[] { },
+                    new string[] { null },
+                    new string[] { "" })]
+        public void CostOfOrderIsCalculatedCorrectly(string[] user, float expectedCost, params string[][] pizzas)
         {
             // Arrange
             Order order1 = new Order(user);
@@ -191,6 +224,36 @@ namespace PizzaStoreTesting.test
 
         }
 
+        // total value cannot exceed $500
+
+        [Fact]
+        public void CostOfOrderIsCappedAtFiveHundred()
+        {
+            // Arrange
+            Order order1 = new Order(new string[] { "John", "Pot" });
+
+            Pizza reallyExpensivePizza = new Pizza();
+            // Create a $100 pizza ($10 base + 90-$1 toppings)
+            for(int i = 0; i < 90; ++i)
+            {
+                reallyExpensivePizza.AddToppingToPizza("Pepperoni");
+            }
+
+            // Add six $100 pizzas = $600 total
+            for(int i = 0; i < 6; ++i)
+            {
+                order1.AddPizzaToOrder(reallyExpensivePizza);
+            }
+
+            // Act
+            float actualCost = order1.Cost;
+
+            // Assert
+            Assert.Equal(500, actualCost);
+            // Order logic should reject the last pizza
+            Assert.Equal(5, order1.PizzaList.Count);
+        }
+    
         #endregion
     }
 }

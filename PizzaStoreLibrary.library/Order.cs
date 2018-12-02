@@ -9,6 +9,7 @@ namespace PizzaStoreLibrary.library
     {
         // Pizza limit denoted by project instructions
         private static readonly int MaxPizzasPerOrder = 12;
+        private static readonly int MaxCostPerOrder = 500;
 
         #region Fields
 
@@ -71,8 +72,20 @@ namespace PizzaStoreLibrary.library
         public Location Location { get => _location; set => _location = value; }
         public User User { get => _user; set => _user = value; }
         public DateTime OrderTime { get => _orderTime; set => _orderTime = value; }
-        public List<Pizza> PizzaList { get => _pizzas; set => _pizzas = value; }
-        public float Cost { get => _cost; set => _cost = value; }
+        public List<Pizza> PizzaList { get => _pizzas; }
+        public float Cost
+        {
+            get
+            {
+                float totalCost = 0.0f;
+                foreach (Pizza pizza in PizzaList)
+                {
+                    totalCost += pizza.Cost;
+                }
+
+                return totalCost;
+            }
+        }
 
         #endregion
 
@@ -85,7 +98,8 @@ namespace PizzaStoreLibrary.library
             // TODO: Maybe let the user know they are
             //  adding too many pizzas? Set up event/delegate
             //  here to fire when too many pizzas are added!
-            if (PizzaList.Count == MaxPizzasPerOrder || !pizza.IsValid())
+            if (PizzaList.Count == MaxPizzasPerOrder || !pizza.IsValid() || 
+                pizza.Cost + Cost > MaxCostPerOrder)
                 return;
 
             PizzaList.Add(pizza);

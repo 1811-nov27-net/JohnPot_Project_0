@@ -11,9 +11,23 @@ namespace PizzaStoreInterface.UI
     {
         static void Main(string[] args)
         {
-            Pizza p = new Pizza(new string[] { null });
+            // Arrange
+            Order order1 = new Order(new string[] { "John", "Pot" });
 
-            Console.WriteLine(p.IsValid());
+            Pizza reallyExpensivePizza = new Pizza();
+            // Create a $100 pizza ($10 base + 90-$1 toppings)
+            for (int i = 0; i < 90; ++i)
+            {
+                reallyExpensivePizza.AddToppingToPizza("Pepperoni");
+            }
+            
+            // Add six $100 pizzas = $600 total
+            for (int i = 0; i < 6; ++i)
+            {
+                order1.AddPizzaToOrder(reallyExpensivePizza);
+            }
+
+            Console.WriteLine(order1.PizzaList.Count);
 
         }
     }
