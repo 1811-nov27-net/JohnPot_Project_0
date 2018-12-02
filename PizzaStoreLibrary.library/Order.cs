@@ -7,6 +7,11 @@ namespace PizzaStoreLibrary.library
 {
     public class Order
     {
+        // Pizza limit denoted by project instructions
+        private static readonly int MaxPizzasPerOrder = 12;
+
+        #region Fields
+
         // has a location
         private Location _location;
         // has a user
@@ -18,8 +23,9 @@ namespace PizzaStoreLibrary.library
         // total value cannot exceed $500
         private float _cost;
 
-        // Pizza limit denoted by project instructions
-        private static readonly int MaxPizzasPerOrder = 12;
+        #endregion
+
+        #region Constructors
 
         /***** Constructors *****/
         // Intentionally left out default constructor
@@ -58,13 +64,19 @@ namespace PizzaStoreLibrary.library
         :this(user, new Location(location))   
         {
         }
-        
+        #endregion
+
+        #region Properties
 
         public Location Location { get => _location; set => _location = value; }
         public User User { get => _user; set => _user = value; }
         public DateTime OrderTime { get => _orderTime; set => _orderTime = value; }
         public List<Pizza> PizzaList { get => _pizzas; set => _pizzas = value; }
         public float Cost { get => _cost; set => _cost = value; }
+
+        #endregion
+
+        #region Methods
 
         // Core Add pizza method that will be called
         //  on all variations of AddPizzaToOrder
@@ -73,7 +85,7 @@ namespace PizzaStoreLibrary.library
             // TODO: Maybe let the user know they are
             //  adding too many pizzas? Set up event/delegate
             //  here to fire when too many pizzas are added!
-            if (PizzaList.Count > MaxPizzasPerOrder)
+            if (PizzaList.Count == MaxPizzasPerOrder || !pizza.IsValid())
                 return;
 
             PizzaList.Add(pizza);
@@ -94,5 +106,7 @@ namespace PizzaStoreLibrary.library
         {
             SetOrderLocation(new Location(location));
         }
+
+        #endregion
     }
 }

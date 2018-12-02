@@ -4,6 +4,7 @@ using System.Text;
 
 namespace PizzaStoreLibrary.library
 {
+    // TODO: Maybe make this an interface?
     public class Name
     {
         // Consts for invalid user input

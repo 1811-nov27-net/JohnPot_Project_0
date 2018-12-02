@@ -11,8 +11,10 @@ namespace PizzaStoreInterface.UI
     {
         static void Main(string[] args)
         {
-            string[] stest = new string[] { };
-            Console.WriteLine(stest?.Length);
+            Pizza p = new Pizza(new string[] { null });
+
+            Console.WriteLine(p.IsValid());
+
         }
     }
 }

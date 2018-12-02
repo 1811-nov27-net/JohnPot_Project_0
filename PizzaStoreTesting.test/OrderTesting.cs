@@ -103,7 +103,7 @@ namespace PizzaStoreTesting.test
 
         #endregion
 
-        #region Number of Pizza's order can have
+        #region Number of Pizzas order can have
         // can have at most 12 pizzas
 
         [Theory]
@@ -113,13 +113,46 @@ namespace PizzaStoreTesting.test
                     new string[] { "Peperoni", "Olives" },
                     new string[] { "Cheese", "Olives" },
                     new string[] { "Olives" })]
-        void AddingPizzaToAnOrderIncreasesOrderCount(string[] user, int expected, params string[][] pizzas)
+        // Passing in only one pizza
+        [InlineData(new string[] { "John", "Pot" },
+                    1,
+                    new string[] { "Peperoni", "Olives" })]
+        // Too many pizzas (13 total)
+        [InlineData(new string[] { "John", "Pot" },
+                    12,
+                    new string[] { "Peperoni", "Olives" },
+                    new string[] { "Peperoni", "Olives" },
+                    new string[] { "Peperoni", "Olives" },
+                    new string[] { "Peperoni", "Olives" },
+                    new string[] { "Peperoni", "Olives" },
+                    new string[] { "Peperoni", "Olives" },
+                    new string[] { "Peperoni", "Olives" },
+                    new string[] { "Peperoni", "Olives" },
+                    new string[] { "Peperoni", "Olives" },
+                    new string[] { "Peperoni", "Olives" },
+                    new string[] { "Peperoni", "Olives" },
+                    new string[] { "Peperoni", "Olives" },
+                    new string[] { "Peperoni", "Olives" })]
+        // Passing in bad pizzas
+        [InlineData(new string[] { "John", "Pot" },
+                    0,
+                    new string[] { null })]
+        [InlineData(new string[] { "John", "Pot" },
+                    0,
+                    new string[] { "" })]
+        [InlineData(new string[] { "John", "Pot" },
+                    0,
+                    new string[] { "Some bad topping" })]
+        void AddingPizzaToAnOrderIncreasesPizzaOrderCount(string[] user, int expected, params string[][] pizzas)
         {
             // Arrange
             Order order1 = new Order(user);
-            foreach (string[] pizza in pizzas)
+            if(pizzas != null)
             {
-                order1.AddPizzaToOrder(pizza);
+                foreach (string[] pizza in pizzas)
+                {
+                    order1.AddPizzaToOrder(pizza);
+                }
             }
             
             // Act
@@ -131,6 +164,33 @@ namespace PizzaStoreTesting.test
         }
 
         #endregion
+
+        #region Order Cost
+
         // total value cannot exceed $500
+        
+        [Theory]
+        [InlineData(new string[] { "John", "Pot" },
+                    25,
+                    new string[] { "Cheese", "Peperoni" },
+                    new string[] { "Olives" })]
+        public void CostOfOrderIsCalculatedCorrectly(string[] user, int expectedCost, params string[][] pizzas)
+        {
+            // Arrange
+            Order order1 = new Order(user);
+            foreach (string[] pizza in pizzas)
+            {
+                order1.AddPizzaToOrder(pizza);
+            }
+
+            // Act
+            float actualCost = order1.Cost;
+
+            // Assert
+            Assert.Equal(expectedCost, actualCost);
+
+        }
+
+        #endregion
     }
 }
