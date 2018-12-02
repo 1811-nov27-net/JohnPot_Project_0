@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace PizzaStoreTesting.test
+namespace PizzaStoreLibrary.library
 {
     public class User
     {
