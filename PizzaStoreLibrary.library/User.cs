@@ -9,7 +9,7 @@ namespace PizzaStoreLibrary.library
         private Name _name;
         private Name _defaultLocation;
 
-        public User(string[] names)
+        public User(params string[] names)
         {
             // If no name or only a first name was given
             //  reject the entry

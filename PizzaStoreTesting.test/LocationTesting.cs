@@ -55,17 +55,29 @@ namespace PizzaStoreTesting.test
                     new int[] { 10, 10 },
                     "John's Pizzaria",
                     8)]
+        // Ingredients/Inventory are corresponding; 
+        //  ingredients[0] has inventory[0] available 
         public void InventoryDepletesAsOrdersAreProcessed(string[] ingredients, int[] inventory, string name, int expectedRemaing)
         {
             // Arrange
+            // Create and stock a new location
             Location location = new Location(name);
             for(int i = 0; i < ingredients.Length; ++i)
             {
                 location.StockInventory(new KeyValuePair<string, int>(ingredients[i], inventory[i]));
             }
 
+            // Create a new order to be placed
+            Order order1 = new Order(new string[] { "John", "Pot" }, location);
+            // Build and add a new pizza to the order
+            Pizza p = new Pizza();
+            p.AddToppingsToPizza("Cheese", "Pepperoni");
+            order1.AddPizzaToOrder(p);
+
             // Act
-            //location.PlaceOrder(new Order("Cheese", "Olives"));
+
+            location.PlaceOrder(order1);
+
             int remainingInventory = location.Inventory.Sum(i => i.Value);
 
             // Assert

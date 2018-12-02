@@ -45,17 +45,9 @@ namespace PizzaStoreLibrary.library
             }
         }
 
-        // Overriding Equality operator to check if values
-        //  are equal instead of checking same instance
-        //public override bool Equals(object obj)
-        //{
-        //    if (obj == null || !this.GetType().Equals(obj.GetType()))
-        //        return false;
+        public void PlaceOrder(Order order)
+        {
 
-        //    Location rhs = (Location)obj;
-
-        //    return rhs.Name == Name;
-        //}
-
+        }
     }
 }

@@ -21,8 +21,6 @@ namespace PizzaStoreLibrary.library
         private DateTime _orderTime;
         // can have at most 12 pizzas
         private List<Pizza> _pizzas;
-        // total value cannot exceed $500
-        private float _cost;
 
         #endregion
 
@@ -43,7 +41,7 @@ namespace PizzaStoreLibrary.library
             _orderTime = new DateTime();
             _pizzas = new List<Pizza>();
         }
-        public Order(string[] user)
+        public Order(params string[] user)
         :this(new User(user))
         {
         }
@@ -73,6 +71,7 @@ namespace PizzaStoreLibrary.library
         public User User { get => _user; set => _user = value; }
         public DateTime OrderTime { get => _orderTime; set => _orderTime = value; }
         public List<Pizza> PizzaList { get => _pizzas; }
+        // total value cannot exceed $500
         public float Cost
         {
             get
@@ -105,7 +104,7 @@ namespace PizzaStoreLibrary.library
             PizzaList.Add(pizza);
         }
         // Adding new pizza using strings
-        public void AddPizzaToOrder(string[] ingredients)
+        public void AddPizzaToOrder(params string[] ingredients)
         {
             AddPizzaToOrder(new Pizza(ingredients));
         }

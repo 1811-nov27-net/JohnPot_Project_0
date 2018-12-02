@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace PizzaStoreLibrary.library
@@ -52,10 +53,17 @@ namespace PizzaStoreLibrary.library
         {
         }
 
-        public void AddToppingToPizza(string ingredient)
+        private void AddToppingToPizza(string ingredient)
         {
             if (ValidIngredient(ingredient))
                 Ingredients.Add(ingredient.ToLower());
+        }
+        public void AddToppingsToPizza(params string[] toppings)
+        {
+            foreach (string topping in toppings)
+            {
+                AddToppingToPizza(topping);
+            }
         }
 
         // Determine if the pizza is a proper pizza
@@ -79,6 +87,7 @@ namespace PizzaStoreLibrary.library
 
             return IngredientList.ContainsKey(ingredient.ToLower());
         }
+
 
         private float CalculatePizzaCost()
         {
