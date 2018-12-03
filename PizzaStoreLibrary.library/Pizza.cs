@@ -19,6 +19,9 @@ namespace PizzaStoreLibrary.library
 
         public static readonly float BasePizzaCost = 10.0f;
 
+        // TODO: Fix this.
+        public const string InvalidIngredient = "Invalid Ingredient";
+
         private List<string> _ingredients = new List<string>();
 
         public List<string> Ingredients { get => _ingredients; }
@@ -29,14 +32,15 @@ namespace PizzaStoreLibrary.library
 
         public Pizza() { }
 
-        public Pizza(string[] ingredients)
+        public Pizza(params string[] ingredients)
         {
             if (ingredients.Length == 0)
                 return;
             
             // Validation check each ingredient using LINQ
             //  before adding it to the list of ingredients
-            foreach (string item in ingredients.Where(i => i != null && ValidIngredient(i)))
+            foreach (string item in ingredients.Where(i => i != null && 
+                     ValidateIngredient(i) != InvalidIngredient))
             {
                 string ingredient = item;
 
@@ -55,7 +59,7 @@ namespace PizzaStoreLibrary.library
 
         private void AddToppingToPizza(string ingredient)
         {
-            if (ValidIngredient(ingredient))
+            if (ValidateIngredient(ingredient) != InvalidIngredient)
                 Ingredients.Add(ingredient.ToLower());
         }
         public void AddToppingsToPizza(params string[] toppings)
@@ -80,12 +84,15 @@ namespace PizzaStoreLibrary.library
         //  can be considered valid.
         // Method checks to see if ingredient 
         //  is on the list of ingredients 
-        private bool ValidIngredient(string ingredient)
+        public static string ValidateIngredient(string ingredient)
         {
             if (ingredient.EndsWith("s"))
                 ingredient = ingredient.Remove(ingredient.Length - 1);
 
-            return IngredientList.ContainsKey(ingredient.ToLower());
+            if (IngredientList.ContainsKey(ingredient.ToLower()))
+                return ingredient.ToLower();
+
+            return InvalidIngredient;
         }
 
 

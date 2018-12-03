@@ -1,6 +1,7 @@
 ﻿using PizzaStoreLibrary.library;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PizzaStoreInterface.UI
 {
@@ -11,24 +12,30 @@ namespace PizzaStoreInterface.UI
     {
         static void Main(string[] args)
         {
-            // Arrange
-            Order order1 = new Order(new string[] { "John", "Pot" });
+            // Create a new order to be placed
+            Order order1 = new Order(new string[] { "John", "Pot" }, new Location("John's Pizzaria"));
+            string[][] pizzas = new string[][]
+            {
+                new string[]{ "Olives" }
+            };
 
-            Pizza reallyExpensivePizza = new Pizza();
-            // Create a $100 pizza ($10 base + 90-$1 toppings)
-            for (int i = 0; i < 90; ++i)
+            // Build and add pizzas to the order
+            foreach (string[] pizza in pizzas)
             {
-                reallyExpensivePizza.AddToppingsToPizza("Pepperoni");
-            }
-            
-            // Add six $100 pizzas = $600 total
-            for (int i = 0; i < 6; ++i)
-            {
-                order1.AddPizzaToOrder(reallyExpensivePizza);
+                Pizza p = new Pizza(pizza);
+                order1.AddPizzaToOrder(p);
             }
 
-            Console.WriteLine(order1.PizzaList.Count);
+            Location location = new Location("John's Pizzaria");
+            Dictionary<string, int> ingredientList = new Dictionary<string, int>()
+            {
+                {"Cheese", 10 },
+                {"Pepperoni", 10 }
+            };
+            location.StockInventory(ingredientList);
+            location.PlaceOrder(order1);
 
+            Console.WriteLine(location.Inventory.Sum(i => i.Value));
         }
     }
 }
