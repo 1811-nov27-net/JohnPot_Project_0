@@ -4,7 +4,6 @@ using System.Text;
 
 namespace PizzaStoreLibrary.library
 {
-    // TODO: Maybe make this an interface?
     public class Name
     {
         // Consts for invalid user input
@@ -57,6 +56,12 @@ namespace PizzaStoreLibrary.library
         public static implicit operator Name(string[] names)
         {
             return new Name(names);
+        }
+
+        /***** Equality *****/
+        public bool Equals(Name rhs)
+        {
+            return FirstName.Equals(rhs.FirstName) && LastName.Equals(rhs.LastName);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using PizzaStoreLibrary.library;
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace PizzaStoreTesting.test
@@ -96,8 +97,34 @@ namespace PizzaStoreTesting.test
         #region Order Time
         // has an order time(when the order was placed)
 
-        public void OrderHasCorrectTimeWhenPlaced()
+        [Theory]
+        [InlineData(true,
+                    new string[] { "Cheese" })]
+        public void OrderHasCorrectTimeWhenPlaced(bool expectedTimeIsNow, params string[][] pizzas)
         {
+            // Arrange
+            Location location = new Location("John's Pizzaria");
+            location.StockInventory(new KeyValuePair<string, int>("Cheese", 100));
+            User user = new User("John", "Pot");
+            Order order1 = new Order(user);
+            foreach (string[] pizza in pizzas)
+            {
+                order1.AddPizzaToOrder(pizza);
+            }
+
+            // Act
+            bool orderPlaced = location.PlaceOrder(order1);
+
+
+            // Assert
+            if(orderPlaced)
+            {
+                // TODO: Figure out some TimeSpan epsilon or something
+                //  to properly test this.
+                //TimeSpan currentTime = DateTime.Now.TimeOfDay;
+                //Assert.True((currentTime - order1.OrderTime) == TimeSpan.Zero 
+                //            == expectedTimeIsNow);
+            }
 
         }
 

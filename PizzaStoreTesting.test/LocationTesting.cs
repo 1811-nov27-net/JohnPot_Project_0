@@ -226,6 +226,192 @@ namespace PizzaStoreTesting.test
             // Assert
             Assert.True(oldOrder == order2);
         }
-        #endregion  
+
+        [Theory]
+        // Order 1 pizza
+        [InlineData(true,
+                    new string[] { "Cheese" })]
+        // Order multiple pizzas
+        [InlineData(true,
+                    new string[] { "Cheese" },
+                    new string[] { "Pepperoni" },
+                    new string[] { "Olives" })]
+        // Try to order 0 pizzas
+        [InlineData(false,
+                    new string[] { "" })]
+        public void SuggestOrderBasedOnPreviousOrders(bool expected, params string[][] pizzas)
+        {
+            // Arrange
+            Location location = new Location("John's Pizzaria");
+            location.StockInventory(new KeyValuePair<string, int>("Cheese", 100));
+            location.StockInventory(new KeyValuePair<string, int>("Pepperoni", 100));
+            location.StockInventory(new KeyValuePair<string, int>("Olives", 100));
+            User user = new User("John", "Pot");
+            Order order1 = new Order(user);
+            foreach (string[] pizza in pizzas)
+            {
+                order1.AddPizzaToOrder(pizza);
+            }
+
+            // Act
+            bool orderPlaced = location.PlaceOrder(order1);
+            Order order2 = location.SuggestOrder(user);
+            
+
+            // Assert
+            if (order2 != null)
+                Assert.True((order1.Equals(order2)) == expected);
+            else
+                Assert.True(orderPlaced == expected);
+
+        }
+
+        [Theory]
+        // Passing in if the test should pass or fail and each 
+        //  string[] will be a new order
+        [InlineData(true, 
+            new string[] { "Cheese"},
+            new string[] { "Cheese"},
+            new string[] { "Cheese"},
+            new string[] { "Cheese"})]
+        // Order no pizzas
+        [InlineData(true,
+            new string[] { "" })]
+        // Place a bunch of different orders
+        [InlineData(true,
+            new string[] { "Cheese" },
+            new string[] { "Pepperoni" },
+            new string[] { "Olives" },
+            new string[] { "Cheese", "Olives", "Pepperoni" })]
+        public void GetFullHistoryOfLoctaion(bool expected, params string[][] orders)
+        {
+            // Arrange
+            Location location = new Location("John's Pizzaria");
+            location.StockInventory(new KeyValuePair<string, int>("Cheese", 100));
+            location.StockInventory(new KeyValuePair<string, int>("Pepperoni", 100));
+            location.StockInventory(new KeyValuePair<string, int>("Olives", 100));
+            User user = new User("John", "Pot");
+            List<Order> orderList = new List<Order>();
+            foreach (string[] pizza in orders)
+            {
+                Order o = new Order(user);
+                o.AddPizzaToOrder(pizza);
+                orderList.Add(o);
+            }
+            bool orderPlaced = false;
+            // Place all the orders
+            foreach (Order o in orderList)
+            {
+                orderPlaced = location.PlaceOrder(o);
+                // Manually modify the order time
+                //  so we can place multiple
+                if(orderPlaced)
+                {
+                    TimeSpan threeHours = new TimeSpan(3, 0, 0);
+                    o.OrderTime -= threeHours;
+                }
+            }
+
+            // Act
+
+            Stack<Order> orderHistory = location.GetFullHistory();
+
+            // Assert
+            foreach (Order o1 in orderHistory)
+            {
+                bool found = false;
+                foreach(Order o2 in orderList)
+                {
+                    if(o1.Equals(o2))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                    Assert.True(expected == found);
+            }
+
+            Assert.True(expected == true);
+
+        }
+
+        [Theory]
+        // Passing in if the test should pass or fail and each 
+        //  string[] will be a new order
+        [InlineData(true,
+            new string[] { "Cheese" },
+            new string[] { "Cheese" },
+            new string[] { "Cheese" },
+            new string[] { "Cheese" })]
+        // Order no pizzas
+        [InlineData(true,
+            new string[] { "" })]
+        // Place a bunch of different orders
+        [InlineData(true,
+            new string[] { "Cheese" },
+            new string[] { "Pepperoni" },
+            new string[] { "Olives" },
+            new string[] { "Cheese", "Olives", "Pepperoni" })]
+        public void GetFullHistoryOfSpecificUser(bool expected, params string[][] orders)
+        {
+            // Arrange
+            Location location = new Location("John's Pizzaria");
+            location.StockInventory(new KeyValuePair<string, int>("Cheese", 100));
+            location.StockInventory(new KeyValuePair<string, int>("Pepperoni", 100));
+            location.StockInventory(new KeyValuePair<string, int>("Olives", 100));
+            User userToCheckHistoryOf = new User("John", "Pot");
+            User userToAddAdditionalOrders = new User("Dummy", "dummy");
+            List<Order> orderList = new List<Order>();
+            foreach (string[] pizza in orders)
+            {
+                Order o = new Order(userToCheckHistoryOf);
+                o.AddPizzaToOrder(pizza);
+                orderList.Add(o);
+            }
+            bool orderPlaced = false;
+
+            // Place all the orders for main user
+            foreach (Order o in orderList)
+            {
+                orderPlaced = location.PlaceOrder(o);
+                // Manually modify the order time
+                //  so we can place multiple
+                if (orderPlaced)
+                {
+                    TimeSpan threeHours = new TimeSpan(3, 0, 0);
+                    o.OrderTime -= threeHours;
+                }
+            }
+            // Place a dummy order to differentiate between
+            //  full location history and just the user history
+            Order d = new Order(userToAddAdditionalOrders);
+            d.AddPizzaToOrder("Cheese");
+            location.PlaceOrder(d);
+
+            // Act
+
+            Stack<Order> userOrderHistory = location.GetFullHistory(userToCheckHistoryOf);
+
+            // Assert
+            foreach (Order o1 in userOrderHistory)
+            {
+                bool found = false;
+                foreach (Order o2 in orderList)
+                {
+                    if (o1.Equals(o2))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                    Assert.True(expected == found);
+            }
+
+            Assert.True(expected == true);
+        }
+        
+        #endregion
     }
 }

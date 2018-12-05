@@ -1,6 +1,7 @@
 ﻿using System;
 using Xunit;
 using PizzaStoreLibrary.library;
+using System.Collections.Generic;
 
 namespace PizzaStoreTesting.test
 {
@@ -123,31 +124,130 @@ namespace PizzaStoreTesting.test
 
         /***** cannot place more than one order from the same location within two hours *****/
 
-        /*
+        [Theory]
+        // User places order of Cheese + Pepperoni pizza successfully
+        [InlineData(true,
+                    new string[] { "Cheese", "Pepperoni" })]
+        // Try to order 0 pizzas
+        [InlineData(false,
+                    new string[] { "" })]
+        // Try to order too many pizzas (13)
+        //  TODO: Should we create orders that 
+        //   have too many pizzas and reject the 
+        //   order at the location or just cap
+        //   the number of pizzas added while we
+        //   are composing the order... Currently
+        //   using the latter so this will successfully
+        //   place an order for 12 pizzas, excluding the 13th
+        [InlineData(true,
+                    new string[] { "Cheese" },
+                    new string[] { "Cheese" },
+                    new string[] { "Cheese" },
+                    new string[] { "Cheese" },
+                    new string[] { "Cheese" },
+                    new string[] { "Cheese" },
+                    new string[] { "Cheese" },
+                    new string[] { "Cheese" },
+                    new string[] { "Cheese" },
+                    new string[] { "Cheese" },
+                    new string[] { "Cheese" },
+                    new string[] { "Cheese" },
+                    new string[] { "Cheese" })]
+        public void UserCanPlaceOrders(bool expected, params string[][] pizzas)
+        {
+            // Arrange
+            User user = new User("John", "Pot");
+            Location location = new Location("John's Pizzaria");
+            location.StockInventory(new KeyValuePair<string, int>("Cheese", 100));
+            location.StockInventory(new KeyValuePair<string, int>("Pepperoni", 100));
+            Order order1 = new Order(user);
+            foreach (string[] pizza in pizzas)
+            {
+                order1.AddPizzaToOrder(pizza);
+            }
+
+
+            // Act
+            bool orderPlaced = location.PlaceOrder(order1);
+
+            // Assert
+            Assert.True(orderPlaced == expected);
+        }
+
+
+        [Fact]
         public void UserCannotOrderFromSameLocationWithinTwoHours()
         {
             // Arrange
-            User user = new User(fullName, addresses);
+            User user = new User("John", "Pot");
+
+            // For each order create a new location
+            Location location1 = new Location("John's Pizzaria");
+            location1.StockInventory(new KeyValuePair<string, int>("Cheese", 100));
+            location1.StockInventory(new KeyValuePair<string, int>("Pepperoni", 100));
+            // Second location since we can't order from the same one
+            //  but can order from two different ones in two hours
+            Location location2 = new Location("John's Second Pizzaria");
+            location2.StockInventory(new KeyValuePair<string, int>("Cheese", 100));
+            location2.StockInventory(new KeyValuePair<string, int>("Pepperoni", 100));
+            // Create a couple different orders
+            Order order1 = new Order(user);
+            order1.AddPizzaToOrder("Cheese");
+            Order order2 = new Order(user);
+            order2.AddPizzaToOrder("Pepperoni");
 
             // Act
-            user.PlaceOrder();
-            user.PlaceOrder();
+            // Placing first order at first location should be successful
+            bool firstOrder = location1.PlaceOrder(order1);
+            // A second (different) order should be rejected
+            bool SecondOrder = location1.PlaceOrder(order2);
+            // Placing an order at a new location should be successful
+            bool ThirdOrder = location2.PlaceOrder(order1);
+            // Just for completeness lets test placing another
+            //  order at the second location before enough time has
+            //  elapsed
+            bool FourthOrder = location2.PlaceOrder(order2);
+
             // Assert
+            Assert.True(firstOrder);
+            Assert.False(SecondOrder);
+            Assert.True(ThirdOrder);
+            Assert.False(FourthOrder);
 
-            // To place an order does the user need to 
-            //  know what an Order is? 
-            // Store handles orders?
-            // To place an order you need to know:
-            //  - Where we are ordering from
-            //  - What we are ordering
-            //  - Who is ording it
-            // Should be handled through order testing!
 
-            // SideNote: Delivery?
-            //  Do we care where the user is located?
-            // No.
         }
-        */
+        [Fact]
+        public void UserCanPlaceSecondOrderAfterTwoHoursHaveElapsed()
+        {
+            // Arrange
+            User user = new User("John", "Pot");
+
+            // For each order create a new location
+            Location location1 = new Location("John's Pizzaria");
+            location1.StockInventory(new KeyValuePair<string, int>("Cheese", 100));
+            location1.StockInventory(new KeyValuePair<string, int>("Pepperoni", 100));
+            // Create a couple different orders
+            Order order1 = new Order(user);
+            order1.AddPizzaToOrder("Cheese");
+            Order order2 = new Order(user);
+            order2.AddPizzaToOrder("Pepperoni");
+
+            // Act
+            // Placing first order at first location should be successful
+            bool firstOrder = location1.PlaceOrder(order1);
+            // Act like the order was placed 3 hours ago...
+            TimeSpan threeHours = new TimeSpan(3, 0, 0);
+            order1.OrderTime -= threeHours;
+            // Place a new order after three hours. Should succeed
+            bool secondOrder = location1.PlaceOrder(order2);
+
+            // Assert
+            Assert.True(firstOrder);
+            Assert.True(secondOrder);
+
+
+        }
+
 
     }
 

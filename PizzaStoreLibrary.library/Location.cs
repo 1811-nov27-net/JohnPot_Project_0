@@ -8,11 +8,13 @@ namespace PizzaStoreLibrary.library
     public class Location
     {
         // Name of ingredient to number in inventory
-        private Dictionary<string, int> _inventory = new Dictionary<string, int>();
+        private readonly Dictionary<string, int> _inventory = new Dictionary<string, int>();
+        // Hold a stack of all placed orders to this Location. Top of the stack 
+        //  was placed most recently
+        private readonly Stack<Order> _orderHistory = new Stack<Order>();
 
+        // TODO: Change name to interface
         private Name _name;
-        private Stack<Order> _orderHistory = new Stack<Order>();
-
         public Name Name { get => _name; set => _name = value; }
 
         // Leaving out the setter to force the user
@@ -27,7 +29,6 @@ namespace PizzaStoreLibrary.library
             else
                 _name = new Name(name);
         }
-
         public Location(string name, KeyValuePair<string, int>[] ingredients)
         : this(name)
         {
@@ -60,7 +61,6 @@ namespace PizzaStoreLibrary.library
                 StockInventory(ingredient);
             }
         }
-
         private void DepleteInventory(KeyValuePair<string, int> ingredient)
         {
             string validatedIngredient = Pizza.ValidateIngredient(ingredient.Key);
@@ -73,6 +73,18 @@ namespace PizzaStoreLibrary.library
         //  successfully placed
         public bool PlaceOrder(Order order)
         {
+            // Stop user from ordering from the same
+            //  location before two hours has elapsed
+            Order pastOrder = GetLastOrder(order.User);
+            if(pastOrder != null)
+            {
+                TimeSpan currentTime = DateTime.Now.TimeOfDay;
+                TimeSpan elapsedTime = currentTime - pastOrder.OrderTime;
+                if (elapsedTime.Hours < 2)
+                    return false;
+            }
+
+
             // Create a dictionary of all ingredients
             //  required to make this order
             Dictionary<string, int> ingredientList = new Dictionary<string, int>();
@@ -90,7 +102,7 @@ namespace PizzaStoreLibrary.library
                 }
             }
 
-            if (!CheckInventoryForIngredientList(ingredientList))
+            if (!CheckInventoryForIngredient(ingredientList))
                 return false;
 
             // Finialize the order by depleting ingredients
@@ -106,10 +118,12 @@ namespace PizzaStoreLibrary.library
 
             return true;
         }
-        
 
-        private bool CheckInventoryForIngredientList(Dictionary<string, int> ingredientList)
+        private bool CheckInventoryForIngredient(Dictionary<string, int> ingredientList)
         {
+            if (ingredientList == null || ingredientList.Count == 0)
+                return false;
+
             foreach (var ingredient in ingredientList)
             {
                 if (!CheckInventoryForIngredient(ingredient))
@@ -136,12 +150,38 @@ namespace PizzaStoreLibrary.library
 
         public Order GetLastOrder(User user)
         {
-            return OrderHistory.FirstOrDefault(o => o.User == user);
+            return OrderHistory.FirstOrDefault(o => o.User.FullName == user.FullName);
         }
         public Order GetLastOrder()
         {
             if (OrderHistory.Count > 0)
                 return OrderHistory.Peek();
+            return null;
+        }
+        public Stack<Order> GetFullHistory()
+        {
+            return OrderHistory;
+        }
+        public Stack<Order> GetFullHistory(User user)
+        {
+            // Use LINQ to grab only user past orders
+            return new Stack<Order>(OrderHistory
+                .Where(o => o.User.FullName == user.FullName)
+                .Select(o => o));
+
+        }
+        //public Stack<Order> GetHistorySortedBy(Func<Order,Order,bool> f)
+        //{
+            //return new Stack<Order>(OrderHistory
+              //  .OrderBy()
+        //}
+
+        public Order SuggestOrder(User user)
+        {
+            Order pastOrder = GetLastOrder(user);
+            if(pastOrder != null)
+                return new Order(GetLastOrder(user));
+
             return null;
         }
     }

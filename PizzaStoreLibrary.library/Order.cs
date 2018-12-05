@@ -35,6 +35,23 @@ namespace PizzaStoreLibrary.library
         // All Constructors will call this base
         //  constructor. Initialize stuff that needs to 
         //  happen in all Orders here
+
+        // Copy constructor
+        public Order(Order o)
+        : this(o?.User)
+        {
+            // Preform a deep copy of the provided order
+            if (o.Location != null)
+                Location = new Location(o.Location.Name.Location);
+            if (OrderTime != null)
+            {
+                OrderTime = new TimeSpan(o.OrderTime.Hours, o.OrderTime.Minutes, o.OrderTime.Seconds);
+            }
+            foreach (Pizza pizza in o.PizzaList)
+            {
+                PizzaList.Add(new Pizza(pizza.Ingredients));
+            }
+        }
         public Order(User user)
         {
             User = user;
@@ -64,6 +81,33 @@ namespace PizzaStoreLibrary.library
         {
         }
         #endregion
+
+        #region Operators
+
+        
+        public bool Equals(Order rhs)
+        {
+            if ((rhs.Location == null && Location == null) ||
+                (Location.Name.Equals(rhs.Location.Name) &&
+                User.FullName.Equals(rhs.User.FullName)))
+            {
+                // TODO:
+                // I understand there could be different pizzas 
+                //  in the order which would make this a different
+                //  order. Fix later.
+                if (PizzaList.Count == rhs.PizzaList.Count)
+                {
+                    // 1 Second difference buffer for 
+                    //  checking time equality
+                    if(Math.Abs((OrderTime - rhs.OrderTime).Seconds) < 1)
+                        return true;
+                }
+            }
+                
+            return false;
+        }
+        
+        #endregion  
 
         #region Properties
 
@@ -97,7 +141,7 @@ namespace PizzaStoreLibrary.library
             // TODO: Maybe let the user know they are
             //  adding too many pizzas? Set up event/delegate
             //  here to fire when too many pizzas are added!
-            if (PizzaList.Count == MaxPizzasPerOrder || !pizza.IsValid() || 
+            if (PizzaList.Count == MaxPizzasPerOrder || !Pizza.PizzaIsValid(pizza) || 
                 pizza.Cost + Cost > MaxCostPerOrder)
                 return;
 

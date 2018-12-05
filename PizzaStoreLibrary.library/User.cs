@@ -46,7 +46,7 @@ namespace PizzaStoreLibrary.library
 
         }
 
-        // TODO: Location validation.
+        // TODO: Location validation ?
         public bool IsValidLocation(string location)
         {
             if (location == "" || location == null || location.Length == 0)

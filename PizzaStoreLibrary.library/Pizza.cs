@@ -7,8 +7,11 @@ namespace PizzaStoreLibrary.library
     // TODO: Maybe make this a struct?
     public class Pizza
     {
+        #region Static Fields
+        public static readonly float BasePizzaCost = 10.0f;
         // TODO: Pizza is currently coupled with 
-        //  ingredients, is that ok?
+        //  ingredients, is that ok? + Pricing is
+        //  stored here... 
         public static Dictionary<string, float> IngredientList = new Dictionary<string, float>
         {
             { "pepperoni",  1.0f },
@@ -16,25 +19,30 @@ namespace PizzaStoreLibrary.library
             { "cheese",    0.50f },
             { "pineapple", 1.0f}
         };
-
-        public static readonly float BasePizzaCost = 10.0f;
-
-        // TODO: Fix this.
+        // TODO: Fix this. Use meta data? Adding to staic fields 
+        //  section for now. Should probs be static.
         public const string InvalidIngredient = "Invalid Ingredient";
+        #endregion
 
-        private List<string> _ingredients = new List<string>();
+        #region Fields
+        // List of all ingredients required to make 
+        //  the pizza.
+        private readonly List<string> _ingredients = new List<string>();
+        #endregion
 
+        #region Properties
         public List<string> Ingredients { get => _ingredients; }
         public float Cost
         {
             get => CalculatePizzaCost();
         }
+        #endregion
 
+        #region Constructors
         public Pizza() { }
-
         public Pizza(params string[] ingredients)
         {
-            if (ingredients.Length == 0)
+            if (ingredients.Length == 0 || ingredients == null)
                 return;
             
             // Validation check each ingredient using LINQ
@@ -56,12 +64,9 @@ namespace PizzaStoreLibrary.library
         : this(ingredients.ToArray())
         {
         }
+        #endregion
 
-        private void AddToppingToPizza(string ingredient)
-        {
-            if (ValidateIngredient(ingredient) != InvalidIngredient)
-                Ingredients.Add(ingredient.ToLower());
-        }
+        #region Methods
         public void AddToppingsToPizza(params string[] toppings)
         {
             foreach (string topping in toppings)
@@ -69,12 +74,11 @@ namespace PizzaStoreLibrary.library
                 AddToppingToPizza(topping);
             }
         }
-
         // Determine if the pizza is a proper pizza
         //  (has ingredients)
-        public bool IsValid()
+        public static bool PizzaIsValid(Pizza pizza)
         {
-            if (Ingredients.Count == 0)
+            if (pizza.Ingredients.Count == 0)
                 return false;
 
             return true;
@@ -94,8 +98,9 @@ namespace PizzaStoreLibrary.library
 
             return InvalidIngredient;
         }
+        #endregion  
 
-
+        #region Pizza Helper Functions
         private float CalculatePizzaCost()
         {
             float totalIngredientCost = 0.0f;
@@ -105,5 +110,12 @@ namespace PizzaStoreLibrary.library
             }
             return totalIngredientCost + BasePizzaCost;
         }
+        private void AddToppingToPizza(string ingredient)
+        {
+            if (ValidateIngredient(ingredient) != InvalidIngredient)
+                Ingredients.Add(ingredient.ToLower());
+        }
+        #endregion
+
     }
 }

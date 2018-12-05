@@ -12,30 +12,38 @@ namespace PizzaStoreInterface.UI
     {
         static void Main(string[] args)
         {
-            // Create a new order to be placed
-            Order order1 = new Order(new string[] { "John", "Pot" }, new Location("John's Pizzaria"));
             string[][] pizzas = new string[][]
             {
-                new string[]{ "Olives" }
+                new string[] { "Cheese" },
+                new string[] { "Pepperoni" },
+                new string[] { "Olives" },
             };
 
-            // Build and add pizzas to the order
+            // Arrange
+            User user = new User("John", "Pot");
+            Location location = new Location("John's Pizzaria");
+            location.StockInventory(new KeyValuePair<string, int>("Cheese", 10));
+            location.StockInventory(new KeyValuePair<string, int>("Pepperoni", 10));
+            location.StockInventory(new KeyValuePair<string, int>("Olives", 10));
+            Order order1 = new Order(user);
             foreach (string[] pizza in pizzas)
             {
-                Pizza p = new Pizza(pizza);
-                order1.AddPizzaToOrder(p);
+                order1.AddPizzaToOrder(pizza);
             }
 
-            Location location = new Location("John's Pizzaria");
-            Dictionary<string, int> ingredientList = new Dictionary<string, int>()
-            {
-                {"Cheese", 10 },
-                {"Pepperoni", 10 }
-            };
-            location.StockInventory(ingredientList);
             location.PlaceOrder(order1);
+            Order order2 = location.SuggestOrder(user);
 
-            Console.WriteLine(location.Inventory.Sum(i => i.Value));
+            if(order1 == order2)
+            {
+                Console.WriteLine("Equals");
+            }
+            if(order1.Equals(order2))
+            {
+                Console.WriteLine("Equals");
+            }
+
+            int a;
         }
     }
 }
