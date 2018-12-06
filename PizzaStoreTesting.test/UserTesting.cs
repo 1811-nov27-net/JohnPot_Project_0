@@ -19,13 +19,13 @@ namespace PizzaStoreTesting.test
                     new string[] { "John", "Pot" })]
         // User only provides first name
         [InlineData(new string[] { "John" },
-                    new string[] { Name.InvalidName, Name.InvalidName })]
+                    new string[] { Utilities.InvalidName, Utilities.InvalidName })]
         // Empty name
         [InlineData(new string[] { "" },
-                    new string[] { Name.InvalidName, Name.InvalidName })]
+                    new string[] { Utilities.InvalidName, Utilities.InvalidName })]
         // No name provided
         [InlineData(new string[] { },
-                    new string[] { Name.InvalidName, Name.InvalidName })]
+                    new string[] { Utilities.InvalidName, Utilities.InvalidName })]
         // Too many names
         [InlineData(new string[] { "John", "Pot", "Fred", "Jim", "Bob" },
                     new string[] { "John", "Bob" })]
@@ -54,17 +54,17 @@ namespace PizzaStoreTesting.test
         //            "Free Pizzaria", Name.InvalidLocation)]
         // No location provided
         [InlineData(new string[] { "John", "Pot" },
-                    null, Name.InvalidLocation)]
+                    null, Utilities.InvalidLocation)]
         // Pass in empty location name
         [InlineData(new string[] { "John", "Pot" },
-                    "", Name.InvalidLocation)]
+                    "", Utilities.InvalidLocation)]
         public void UserHasDefaultLocationToOrderFromUsingConstructors(string[] fullName, string location, string expected)
         {
             // Arrange
             User user = new User(fullName, location);
 
             // Assert
-            Assert.Equal(expected, user.DefaultLocation.Location);
+            Assert.Equal(expected, user.DefaultLocation);
 
         }
 
@@ -85,7 +85,7 @@ namespace PizzaStoreTesting.test
         [InlineData(new string[] { "John", "Pot" },
                     "",
                     "",
-                    Name.InvalidLocation)]
+                    Utilities.InvalidLocation)]
         // Given no initial location but later passed 
         //  a default location
         [InlineData(new string[] { "John", "Pot" },
@@ -117,7 +117,7 @@ namespace PizzaStoreTesting.test
             user.SetDefaultLocation(defaultLocation);
 
             // Assert
-            Assert.Equal(expected, user.DefaultLocation.Location);
+            Assert.Equal(expected, user.DefaultLocation);
 
         }
         #endregion

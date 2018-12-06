@@ -12,10 +12,9 @@ namespace PizzaStoreLibrary.library
         // Hold a stack of all placed orders to this Location. Top of the stack 
         //  was placed most recently
         private readonly Stack<Order> _orderHistory = new Stack<Order>();
-
-        // TODO: Change name to interface
-        private Name _name;
-        public Name Name { get => _name; set => _name = value; }
+        
+        private string _name;
+        public string Name { get => _name; set => _name = value; }
 
         // Leaving out the setter to force the user
         //  to use the stock inventory method
@@ -25,9 +24,9 @@ namespace PizzaStoreLibrary.library
         public Location(string name)
         {
             if (name == null || name == "")
-                _name = new Name(Name.InvalidLocation);
+                _name = Utilities.InvalidLocation;
             else
-                _name = new Name(name);
+                _name = name;
         }
         public Location(string name, KeyValuePair<string, int>[] ingredients)
         : this(name)

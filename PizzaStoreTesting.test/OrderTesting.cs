@@ -17,11 +17,11 @@ namespace PizzaStoreTesting.test
         // Empty location string provided
         [InlineData("",
                     new string[] { "John", "Pot" },
-                    Name.InvalidLocation)]
+                    Utilities.InvalidLocation)]
         // Null location
         [InlineData(null,
                     new string[] { "John", "Pot" },
-                    Name.InvalidLocation)]
+                    Utilities.InvalidLocation)]
         public void OrderHasLocationAfterCreation(
             string location,
             string[] user,
@@ -40,8 +40,8 @@ namespace PizzaStoreTesting.test
 
 
             // Act
-            string actualLocationOrder1 = order1.Location.Name.Location;
-            string actualLocationOrder2 = order2.Location.Name.Location;
+            string actualLocationOrder1 = order1.Location.Name;
+            string actualLocationOrder2 = order2.Location.Name;
 
             // Assert
             Assert.Equal(expected, actualLocationOrder1);

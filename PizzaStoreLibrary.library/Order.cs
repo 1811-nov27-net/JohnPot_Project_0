@@ -42,7 +42,7 @@ namespace PizzaStoreLibrary.library
         {
             // Preform a deep copy of the provided order
             if (o.Location != null)
-                Location = new Location(o.Location.Name.Location);
+                Location = new Location(o.Location.Name);
             if (OrderTime != null)
             {
                 OrderTime = new TimeSpan(o.OrderTime.Hours, o.OrderTime.Minutes, o.OrderTime.Seconds);
