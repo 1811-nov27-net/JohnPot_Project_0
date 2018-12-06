@@ -7,10 +7,6 @@ namespace PizzaStoreLibrary.library
 {
     public class Order
     {
-        // Pizza limit denoted by project instructions
-        private static readonly int MaxPizzasPerOrder = 12;
-        private static readonly int MaxCostPerOrder = 500;
-
         #region Fields
 
         // has a location
@@ -141,8 +137,8 @@ namespace PizzaStoreLibrary.library
             // TODO: Maybe let the user know they are
             //  adding too many pizzas? Set up event/delegate
             //  here to fire when too many pizzas are added!
-            if (PizzaList.Count == MaxPizzasPerOrder || !Pizza.PizzaIsValid(pizza) || 
-                pizza.Cost + Cost > MaxCostPerOrder)
+            if (PizzaList.Count == Utilities.MaxPizzasPerOrder || !Pizza.PizzaIsValid(pizza) || 
+                pizza.Cost + Cost > Utilities.MaxCostPerOrder)
                 return;
 
             PizzaList.Add(pizza);

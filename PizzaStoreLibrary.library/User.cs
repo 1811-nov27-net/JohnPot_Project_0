@@ -6,13 +6,17 @@ namespace PizzaStoreLibrary.library
 {
     public class User
     {
+        #region Fields
         private readonly string[] _name = new string[2];
         private string _defaultLocation;
+        #endregion
 
+        #region Properties
         public string FirstName { get => _name[0]; set => _name[0] = value; }
         public string LastName{ get => _name[1]; set => _name[1] = value; }
         public string[] FullName { get => _name; }
         public string DefaultLocation { get => _defaultLocation; }
+        #endregion  
 
         #region Constructors
         public User(params string[] names)
@@ -43,15 +47,15 @@ namespace PizzaStoreLibrary.library
         }
         #endregion
 
+        #region Methods
         public void SetDefaultLocation(string location)
         {
             // Validate location before setting it
             if (IsValidLocation(location))
                 _defaultLocation = location;
-
         }
 
-        // TODO: Location validation ?
+        // TODO: Location validation?
         public bool IsValidLocation(string location)
         {
             if (location == "" || location == null || location.Length == 0)
@@ -59,5 +63,6 @@ namespace PizzaStoreLibrary.library
 
             return true;
         }
+        #endregion
     }
 }

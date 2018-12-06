@@ -7,20 +7,24 @@ namespace PizzaStoreLibrary.library
 {
     public class Location
     {
+        #region Fields
         // Name of ingredient to number in inventory
         private readonly Dictionary<string, int> _inventory = new Dictionary<string, int>();
         // Hold a stack of all placed orders to this Location. Top of the stack 
         //  was placed most recently
         private readonly Stack<Order> _orderHistory = new Stack<Order>();
-        
         private string _name;
-        public string Name { get => _name; set => _name = value; }
+        #endregion
 
+        #region Properties
+        public string Name { get => _name; set => _name = value; }
         // Leaving out the setter to force the user
         //  to use the stock inventory method
         public Dictionary<string, int> Inventory { get => _inventory; }
         public Stack<Order> OrderHistory { get => _orderHistory; }
+        #endregion
 
+        #region Constructors
         public Location(string name)
         {
             if (name == null || name == "")
@@ -36,7 +40,9 @@ namespace PizzaStoreLibrary.library
                 StockInventory(ingredient);
             }
         }
+        #endregion
 
+        #region Methods
         public void StockInventory(KeyValuePair<string, int> ingredient)
         {
             // Use validation to remove 's' and insure
@@ -60,16 +66,6 @@ namespace PizzaStoreLibrary.library
                 StockInventory(ingredient);
             }
         }
-        private void DepleteInventory(KeyValuePair<string, int> ingredient)
-        {
-            string validatedIngredient = Pizza.ValidateIngredient(ingredient.Key);
-
-            if (Inventory.ContainsKey(validatedIngredient))
-                Inventory[validatedIngredient] -= ingredient.Value;
-        }
-
-        // Returns whether or not the order was 
-        //  successfully placed
         public bool PlaceOrder(Order order)
         {
             // Stop user from ordering from the same
@@ -117,7 +113,46 @@ namespace PizzaStoreLibrary.library
 
             return true;
         }
+        public Order SuggestOrder(User user)
+        {
+            Order pastOrder = GetLastOrder(user);
+            if(pastOrder != null)
+                return new Order(GetLastOrder(user));
 
+            return null;
+        }
+        public Order GetLastOrder(User user)
+        {
+            return OrderHistory.FirstOrDefault(o => o.User.FullName == user.FullName);
+        }
+        public Order GetLastOrder()
+        {
+            if (OrderHistory.Count > 0)
+                return OrderHistory.Peek();
+            return null;
+        }
+        public Stack<Order> GetFullHistory()
+        {
+            return OrderHistory;
+        }
+        public Stack<Order> GetFullHistory(User user)
+        {
+            // Use LINQ to grab only user past orders
+            return new Stack<Order>(OrderHistory
+                .Where(o => o.User.FullName == user.FullName)
+                .Select(o => o));
+
+        }
+        #endregion
+
+        #region Helper Functions
+        private void DepleteInventory(KeyValuePair<string, int> ingredient)
+        {
+            string validatedIngredient = Pizza.ValidateIngredient(ingredient.Key);
+
+            if (Inventory.ContainsKey(validatedIngredient))
+                Inventory[validatedIngredient] -= ingredient.Value;
+        }
         private bool CheckInventoryForIngredient(Dictionary<string, int> ingredientList)
         {
             if (ingredientList == null || ingredientList.Count == 0)
@@ -146,42 +181,7 @@ namespace PizzaStoreLibrary.library
 
             return false;
         }
+        #endregion
 
-        public Order GetLastOrder(User user)
-        {
-            return OrderHistory.FirstOrDefault(o => o.User.FullName == user.FullName);
-        }
-        public Order GetLastOrder()
-        {
-            if (OrderHistory.Count > 0)
-                return OrderHistory.Peek();
-            return null;
-        }
-        public Stack<Order> GetFullHistory()
-        {
-            return OrderHistory;
-        }
-        public Stack<Order> GetFullHistory(User user)
-        {
-            // Use LINQ to grab only user past orders
-            return new Stack<Order>(OrderHistory
-                .Where(o => o.User.FullName == user.FullName)
-                .Select(o => o));
-
-        }
-        //public Stack<Order> GetHistorySortedBy(Func<Order,Order,bool> f)
-        //{
-            //return new Stack<Order>(OrderHistory
-              //  .OrderBy()
-        //}
-
-        public Order SuggestOrder(User user)
-        {
-            Order pastOrder = GetLastOrder(user);
-            if(pastOrder != null)
-                return new Order(GetLastOrder(user));
-
-            return null;
-        }
     }
 }
