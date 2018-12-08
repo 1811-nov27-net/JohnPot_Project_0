@@ -18,11 +18,12 @@ namespace PizzaStoreLibrary.library
         // can have at most 12 pizzas
         private List<Pizza> _pizzas;
 
+        private Guid _id;
+
         #endregion
 
         #region Constructors
-
-        /***** Constructors *****/
+    
         // Intentionally left out default constructor
         //  since I think a user should be required
         //  inorder to create an order.
@@ -33,26 +34,15 @@ namespace PizzaStoreLibrary.library
         //  happen in all Orders here
 
         // Copy constructor
-        public Order(Order o)
-        : this(o?.User)
-        {
-            // Preform a deep copy of the provided order
-            if (o.Location != null)
-                Location = new Location(o.Location.Name);
-            if (OrderTime != null)
-            {
-                OrderTime = new TimeSpan(o.OrderTime.Hours, o.OrderTime.Minutes, o.OrderTime.Seconds);
-            }
-            foreach (Pizza pizza in o.PizzaList)
-            {
-                PizzaList.Add(new Pizza(pizza.Ingredients));
-            }
-        }
+        // This constructor gets called with 
+        //  each variant of constructors
         public Order(User user)
         {
             User = user;
             _orderTime = new TimeSpan();
             _pizzas = new List<Pizza>();
+            _id = new Guid();
+            _id = Guid.NewGuid();
         }
         public Order(params string[] user)
         :this(new User(user))
@@ -80,27 +70,9 @@ namespace PizzaStoreLibrary.library
 
         #region Operators
 
-        
         public bool Equals(Order rhs)
         {
-            if ((rhs.Location == null && Location == null) ||
-                (Location.Name.Equals(rhs.Location.Name) &&
-                User.FullName.Equals(rhs.User.FullName)))
-            {
-                // TODO:
-                // I understand there could be different pizzas 
-                //  in the order which would make this a different
-                //  order. Fix later.
-                if (PizzaList.Count == rhs.PizzaList.Count)
-                {
-                    // 1 Second difference buffer for 
-                    //  checking time equality
-                    if(Math.Abs((OrderTime - rhs.OrderTime).Seconds) < 1)
-                        return true;
-                }
-            }
-                
-            return false;
+            return Id == rhs.Id;
         }
         
         #endregion  
@@ -125,6 +97,7 @@ namespace PizzaStoreLibrary.library
                 return totalCost;
             }
         }
+        public Guid Id { get => _id; }
 
         #endregion
 
@@ -158,6 +131,30 @@ namespace PizzaStoreLibrary.library
         public void SetOrderLocation(string location)
         {
             SetOrderLocation(new Location(location));
+        }
+
+        public bool IsValid()
+        {
+            if (Location != null && PizzaList.Count > 0
+                && PizzaList.Count <= 12)
+                return true;
+
+            return false;
+        }
+       
+        public void Display()
+        {
+            Console.WriteLine($"OrderId: {Id}");
+            Console.WriteLine($"Total Cost: {Cost}");
+            Console.WriteLine($"Location: {Location?.Name}");
+            Console.WriteLine($"User: {User.FirstName} {User.LastName}");
+            Console.WriteLine($"Time Placed: {OrderTime}");
+            Console.WriteLine($"Pizzas: ({PizzaList.Count} total for this order)");
+            for (int i = 0; i < PizzaList.Count; i++)
+            {
+                Console.Write($"   ({i+1}) ");
+                PizzaList[i].Display();
+            }
         }
 
         #endregion

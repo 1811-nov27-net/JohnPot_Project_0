@@ -83,7 +83,6 @@ namespace PizzaStoreLibrary.library
 
             return true;
         }
-
         // TODO: Serialize list of ingredients that 
         //  can be considered valid.
         // Method checks to see if ingredient 
@@ -97,6 +96,17 @@ namespace PizzaStoreLibrary.library
                 return ingredient.ToLower();
 
             return InvalidIngredient;
+        }
+        public void Display()
+        {
+            Console.Write("Pizza: ");
+            for (int i = 0; i < Ingredients.Count; i++)
+            {
+                Console.Write(Ingredients[i]);
+                if(i != Ingredients.Count - 1)
+                    Console.Write(", ");
+            }
+            Console.WriteLine();
         }
         #endregion  
 

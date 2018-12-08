@@ -79,7 +79,6 @@ namespace PizzaStoreLibrary.library
                     return false;
             }
 
-
             // Create a dictionary of all ingredients
             //  required to make this order
             Dictionary<string, int> ingredientList = new Dictionary<string, int>();
@@ -108,6 +107,7 @@ namespace PizzaStoreLibrary.library
                 DepleteInventory(ingredient);
             }
 
+            order.SetOrderLocation(this);
             order.OrderTime = DateTime.Now.TimeOfDay;
             OrderHistory.Push(order);
 
@@ -117,7 +117,7 @@ namespace PizzaStoreLibrary.library
         {
             Order pastOrder = GetLastOrder(user);
             if(pastOrder != null)
-                return new Order(GetLastOrder(user));
+                return pastOrder;
 
             return null;
         }
@@ -143,9 +143,19 @@ namespace PizzaStoreLibrary.library
                 .Select(o => o));
 
         }
+        public void DisplayOrderHistory()
+        {
+            Console.WriteLine($"Order history for: {Name}");
+            Console.WriteLine();
+            foreach (Order order in OrderHistory)
+            {
+                order.Display();
+                Console.WriteLine();
+            }
+        }
         #endregion
 
-        #region Helper Functions
+        #region Location Helper Functions
         private void DepleteInventory(KeyValuePair<string, int> ingredient)
         {
             string validatedIngredient = Pizza.ValidateIngredient(ingredient.Key);
