@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PizzaStoreInterface.UI", "P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PizzaStoreTesting.test", "PizzaStoreTesting.test\PizzaStoreTesting.test.csproj", "{2CB0AB5B-3C29-43D1-8B26-216FCE65BD58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzaStoreLibrary.library", "PizzaStoreLibrary.library\PizzaStoreLibrary.library.csproj", "{972BD965-0108-4EC3-81D1-10B21C47C6B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PizzaStoreLibrary.library", "PizzaStoreLibrary.library\PizzaStoreLibrary.library.csproj", "{972BD965-0108-4EC3-81D1-10B21C47C6B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzaStoreData.DataAccess", "PizzaStoreData.DataAccess\PizzaStoreData.DataAccess.csproj", "{14DCC6C2-A676-46AB-8A7C-6E5FDA264D23}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,18 @@ Global
 		{972BD965-0108-4EC3-81D1-10B21C47C6B5}.Release|x64.Build.0 = Release|Any CPU
 		{972BD965-0108-4EC3-81D1-10B21C47C6B5}.Release|x86.ActiveCfg = Release|Any CPU
 		{972BD965-0108-4EC3-81D1-10B21C47C6B5}.Release|x86.Build.0 = Release|Any CPU
+		{14DCC6C2-A676-46AB-8A7C-6E5FDA264D23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14DCC6C2-A676-46AB-8A7C-6E5FDA264D23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14DCC6C2-A676-46AB-8A7C-6E5FDA264D23}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{14DCC6C2-A676-46AB-8A7C-6E5FDA264D23}.Debug|x64.Build.0 = Debug|Any CPU
+		{14DCC6C2-A676-46AB-8A7C-6E5FDA264D23}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{14DCC6C2-A676-46AB-8A7C-6E5FDA264D23}.Debug|x86.Build.0 = Debug|Any CPU
+		{14DCC6C2-A676-46AB-8A7C-6E5FDA264D23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14DCC6C2-A676-46AB-8A7C-6E5FDA264D23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14DCC6C2-A676-46AB-8A7C-6E5FDA264D23}.Release|x64.ActiveCfg = Release|Any CPU
+		{14DCC6C2-A676-46AB-8A7C-6E5FDA264D23}.Release|x64.Build.0 = Release|Any CPU
+		{14DCC6C2-A676-46AB-8A7C-6E5FDA264D23}.Release|x86.ActiveCfg = Release|Any CPU
+		{14DCC6C2-A676-46AB-8A7C-6E5FDA264D23}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
