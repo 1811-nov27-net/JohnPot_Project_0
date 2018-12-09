@@ -14,6 +14,7 @@ namespace PizzaStoreLibrary.library
         //  was placed most recently
         private readonly Stack<Order> _orderHistory = new Stack<Order>();
         private string _name;
+        private int id;
         #endregion
 
         #region Properties
@@ -22,6 +23,7 @@ namespace PizzaStoreLibrary.library
         //  to use the stock inventory method
         public Dictionary<string, int> Inventory { get => _inventory; }
         public Stack<Order> OrderHistory { get => _orderHistory; }
+        public int Id { get => id; set => id = value; }
         #endregion
 
         #region Constructors

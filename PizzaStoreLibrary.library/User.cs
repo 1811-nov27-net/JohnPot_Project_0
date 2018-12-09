@@ -9,6 +9,7 @@ namespace PizzaStoreLibrary.library
         #region Fields
         private readonly string[] _name = new string[2];
         private string _defaultLocation;
+        private int id;
         #endregion
 
         #region Properties
@@ -16,7 +17,8 @@ namespace PizzaStoreLibrary.library
         public string LastName{ get => _name[1]; set => _name[1] = value; }
         public string[] FullName { get => _name; }
         public string DefaultLocation { get => _defaultLocation; }
-        #endregion  
+        public int Id { get => id; set => id = value; }
+        #endregion
 
         #region Constructors
         public User(params string[] names)

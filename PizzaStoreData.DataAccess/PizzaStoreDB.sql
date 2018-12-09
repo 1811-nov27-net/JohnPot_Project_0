@@ -1,21 +1,20 @@
 CREATE SCHEMA PizzaStore
 
 GO
---DROP TABLE PizzaStore.[Location]
 -- Table of all locations
 CREATE TABLE PizzaStore.[Location]
 (
-    LocationID INT IDENTITY PRIMARY KEY NOT NULL,
+    LocationId INT IdENTITY PRIMARY KEY NOT NULL,
     Name NVARCHAR(128) NOT NULL
 )
 
---DROP TABLE [User]
 -- Table of all users
 CREATE TABLE PizzaStore.[User]
 (
-    UserID INT IDENTITY PRIMARY KEY NOT NULL,
-    Name NVARCHAR(128) NOT NULL,
-    DefaultLocationID INT FOREIGN KEY REFERENCES PizzaStore.[Location] (LocationID)
+    UserId INT IdENTITY PRIMARY KEY NOT NULL,
+    FirstName NVARCHAR(128) NOT NULL,
+    LastName NVARCHAR(128) NOT NULL,
+    DefaultLocationId INT FOREIGN KEY REFERENCES PizzaStore.[Location] (LocationId)
 )
 
 -- Table of all available ingredients
@@ -23,11 +22,10 @@ CREATE TABLE PizzaStore.[User]
 --    of how many of each ingredient it has.
 --    this is just a table of possible ones
 --    it can have and the cost of it.)
---DROP TABLE PizzaStore.Ingredient
 CREATE TABLE PizzaStore.Ingredient
 (
-    IngredientID INT IDENTITY PRIMARY KEY NOT NULL,
-    Name NVARCHAR(128) NOT NULL,
+    IngredientId INT IdENTITY PRIMARY KEY NOT NULL,
+    Name NVARCHAR(128) UNIQUE NOT NULL,
     -- Cost of ingredient to add to pizza
     Cost FLOAT NOT NULL
 )
@@ -36,38 +34,42 @@ CREATE TABLE PizzaStore.Ingredient
 --  Pizza contains ingredients to create za
 CREATE TABLE PizzaStore.Pizza
 (
-    PizzaID INT IDENTITY PRIMARY KEY NOT NULL,
+    PizzaId INT IdENTITY PRIMARY KEY NOT NULL,
     -- Maximum of 8 toppings per pizza
-    IngredientID1 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientID),
-    IngredientID2 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientID),
-    IngredientID3 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientID),
-    IngredientID4 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientID),
-    IngredientID5 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientID),
-    IngredientID6 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientID),
-    IngredientID7 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientID),
-    IngredientID8 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientID)
+    IngredientId1 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientId),
+    IngredientId2 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientId),
+    IngredientId3 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientId),
+    IngredientId4 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientId),
+    IngredientId5 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientId),
+    IngredientId6 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientId),
+    IngredientId7 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientId),
+    IngredientId8 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientId),
 )
 
---DROP TABLE [ORDER]
 -- Table of all placed orders.
 CREATE TABLE PizzaStore.[Order]
 (
-    OrderID    INT IDENTITY PRIMARY KEY NOT NULL,
-    LocationID INT FOREIGN KEY REFERENCES PizzaStore.[Location] (LocationID),
-    UserID     INT FOREIGN KEY REFERENCES PizzaStore.[User] (UserID),
+    OrderId    INT IdENTITY PRIMARY KEY NOT NULL,
+    LocationId INT FOREIGN KEY REFERENCES PizzaStore.[Location] (LocationId),
+    UserId     INT FOREIGN KEY REFERENCES PizzaStore.[User] (UserId),
     TimePlaced DATETIME2 NOT NULL,
     -- Maximum of 12 pizzas per order
-    PizzaID1  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaID),
-    PizzaID2  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaID),
-    PizzaID3  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaID),
-    PizzaID4  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaID),
-    PizzaID5  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaID),
-    PizzaID6  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaID),
-    PizzaID7  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaID),
-    PizzaID8  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaID),
-    PizzaID9  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaID),
-    PizzaID10 INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaID),
-    PizzaID11 INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaID),
-    PizzaID12 INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaID)
+    PizzaId1  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
+    PizzaId2  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
+    PizzaId3  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
+    PizzaId4  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
+    PizzaId5  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
+    PizzaId6  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
+    PizzaId7  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
+    PizzaId8  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
+    PizzaId9  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
+    PizzaId10 INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
+    PizzaId11 INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
+    PizzaId12 INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId)
 )
 
+DROP TABLE PizzaStore.[ORDER]
+DROP TABLE PizzaStore.Pizza
+DROP TABLE PizzaStore.Ingredient
+DROP TABLE PizzaStore.[User]
+DROP TABLE PizzaStore.[Location]

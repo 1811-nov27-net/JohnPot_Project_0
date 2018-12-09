@@ -263,7 +263,7 @@ namespace PizzaStoreTesting.test
             // Create a $100 pizza ($10 base + 90-$1 toppings)
             for(int i = 0; i < 90; ++i)
             {
-                reallyExpensivePizza.AddToppingsToPizza("Pepperoni");
+                reallyExpensivePizza.AddIngredientsToPizza("Pepperoni");
             }
 
             // Add six $100 pizzas = $600 total

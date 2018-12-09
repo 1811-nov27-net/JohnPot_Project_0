@@ -18,12 +18,37 @@ namespace PizzaStoreLibrary.library
         // can have at most 12 pizzas
         private List<Pizza> _pizzas;
 
-        private Guid _id;
+        private int id;
+
+        #endregion
+
+        #region Properties
+
+        public Location Location { get => _location; set => _location = value; }
+        public User User { get => _user; set => _user = value; }
+        public TimeSpan OrderTime { get => _orderTime; set => _orderTime = value; }
+        public List<Pizza> PizzaList { get => _pizzas; }
+        // total value cannot exceed $500
+        public float Cost
+        {
+            get
+            {
+                float totalCost = 0.0f;
+                foreach (Pizza pizza in PizzaList)
+                {
+                    totalCost += pizza.Cost;
+                }
+
+                return totalCost;
+            }
+        }
+
+        public int Id { get => id; set => id = value; }
 
         #endregion
 
         #region Constructors
-    
+
         // Intentionally left out default constructor
         //  since I think a user should be required
         //  inorder to create an order.
@@ -41,8 +66,6 @@ namespace PizzaStoreLibrary.library
             User = user;
             _orderTime = new TimeSpan();
             _pizzas = new List<Pizza>();
-            _id = new Guid();
-            _id = Guid.NewGuid();
         }
         public Order(params string[] user)
         :this(new User(user))
@@ -77,29 +100,6 @@ namespace PizzaStoreLibrary.library
         
         #endregion  
 
-        #region Properties
-
-        public Location Location { get => _location; set => _location = value; }
-        public User User { get => _user; set => _user = value; }
-        public TimeSpan OrderTime { get => _orderTime; set => _orderTime = value; }
-        public List<Pizza> PizzaList { get => _pizzas; }
-        // total value cannot exceed $500
-        public float Cost
-        {
-            get
-            {
-                float totalCost = 0.0f;
-                foreach (Pizza pizza in PizzaList)
-                {
-                    totalCost += pizza.Cost;
-                }
-
-                return totalCost;
-            }
-        }
-        public Guid Id { get => _id; }
-
-        #endregion
 
         #region Methods
 

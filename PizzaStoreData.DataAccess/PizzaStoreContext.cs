@@ -36,7 +36,9 @@ namespace PizzaStoreData.DataAccess
             {
                 entity.ToTable("Ingredient", "PizzaStore");
 
-                entity.Property(e => e.IngredientId).HasColumnName("IngredientID");
+                entity.HasIndex(e => e.Name)
+                    .HasName("UQ__Ingredie__737584F630263E18")
+                    .IsUnique();
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -47,8 +49,6 @@ namespace PizzaStoreData.DataAccess
             {
                 entity.ToTable("Location", "PizzaStore");
 
-                entity.Property(e => e.LocationId).HasColumnName("LocationID");
-
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(128);
@@ -58,186 +58,138 @@ namespace PizzaStoreData.DataAccess
             {
                 entity.ToTable("Order", "PizzaStore");
 
-                entity.Property(e => e.OrderId).HasColumnName("OrderID");
-
-                entity.Property(e => e.LocationId).HasColumnName("LocationID");
-
-                entity.Property(e => e.PizzaId1).HasColumnName("PizzaID1");
-
-                entity.Property(e => e.PizzaId10).HasColumnName("PizzaID10");
-
-                entity.Property(e => e.PizzaId11).HasColumnName("PizzaID11");
-
-                entity.Property(e => e.PizzaId12).HasColumnName("PizzaID12");
-
-                entity.Property(e => e.PizzaId2).HasColumnName("PizzaID2");
-
-                entity.Property(e => e.PizzaId3).HasColumnName("PizzaID3");
-
-                entity.Property(e => e.PizzaId4).HasColumnName("PizzaID4");
-
-                entity.Property(e => e.PizzaId5).HasColumnName("PizzaID5");
-
-                entity.Property(e => e.PizzaId6).HasColumnName("PizzaID6");
-
-                entity.Property(e => e.PizzaId7).HasColumnName("PizzaID7");
-
-                entity.Property(e => e.PizzaId8).HasColumnName("PizzaID8");
-
-                entity.Property(e => e.PizzaId9).HasColumnName("PizzaID9");
-
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
                 entity.HasOne(d => d.Location)
                     .WithMany(p => p.Order)
                     .HasForeignKey(d => d.LocationId)
-                    .HasConstraintName("FK__Order__LocationI__6FE99F9F");
+                    .HasConstraintName("FK__Order__LocationI__3A179ED3");
 
                 entity.HasOne(d => d.PizzaId1Navigation)
                     .WithMany(p => p.OrderPizzaId1Navigation)
                     .HasForeignKey(d => d.PizzaId1)
-                    .HasConstraintName("FK__Order__PizzaID1__71D1E811");
+                    .HasConstraintName("FK__Order__PizzaId1__3BFFE745");
 
                 entity.HasOne(d => d.PizzaId10Navigation)
                     .WithMany(p => p.OrderPizzaId10Navigation)
                     .HasForeignKey(d => d.PizzaId10)
-                    .HasConstraintName("FK__Order__PizzaID10__7A672E12");
+                    .HasConstraintName("FK__Order__PizzaId10__44952D46");
 
                 entity.HasOne(d => d.PizzaId11Navigation)
                     .WithMany(p => p.OrderPizzaId11Navigation)
                     .HasForeignKey(d => d.PizzaId11)
-                    .HasConstraintName("FK__Order__PizzaID11__7B5B524B");
+                    .HasConstraintName("FK__Order__PizzaId11__4589517F");
 
                 entity.HasOne(d => d.PizzaId12Navigation)
                     .WithMany(p => p.OrderPizzaId12Navigation)
                     .HasForeignKey(d => d.PizzaId12)
-                    .HasConstraintName("FK__Order__PizzaID12__7C4F7684");
+                    .HasConstraintName("FK__Order__PizzaId12__467D75B8");
 
                 entity.HasOne(d => d.PizzaId2Navigation)
                     .WithMany(p => p.OrderPizzaId2Navigation)
                     .HasForeignKey(d => d.PizzaId2)
-                    .HasConstraintName("FK__Order__PizzaID2__72C60C4A");
+                    .HasConstraintName("FK__Order__PizzaId2__3CF40B7E");
 
                 entity.HasOne(d => d.PizzaId3Navigation)
                     .WithMany(p => p.OrderPizzaId3Navigation)
                     .HasForeignKey(d => d.PizzaId3)
-                    .HasConstraintName("FK__Order__PizzaID3__73BA3083");
+                    .HasConstraintName("FK__Order__PizzaId3__3DE82FB7");
 
                 entity.HasOne(d => d.PizzaId4Navigation)
                     .WithMany(p => p.OrderPizzaId4Navigation)
                     .HasForeignKey(d => d.PizzaId4)
-                    .HasConstraintName("FK__Order__PizzaID4__74AE54BC");
+                    .HasConstraintName("FK__Order__PizzaId4__3EDC53F0");
 
                 entity.HasOne(d => d.PizzaId5Navigation)
                     .WithMany(p => p.OrderPizzaId5Navigation)
                     .HasForeignKey(d => d.PizzaId5)
-                    .HasConstraintName("FK__Order__PizzaID5__75A278F5");
+                    .HasConstraintName("FK__Order__PizzaId5__3FD07829");
 
                 entity.HasOne(d => d.PizzaId6Navigation)
                     .WithMany(p => p.OrderPizzaId6Navigation)
                     .HasForeignKey(d => d.PizzaId6)
-                    .HasConstraintName("FK__Order__PizzaID6__76969D2E");
+                    .HasConstraintName("FK__Order__PizzaId6__40C49C62");
 
                 entity.HasOne(d => d.PizzaId7Navigation)
                     .WithMany(p => p.OrderPizzaId7Navigation)
                     .HasForeignKey(d => d.PizzaId7)
-                    .HasConstraintName("FK__Order__PizzaID7__778AC167");
+                    .HasConstraintName("FK__Order__PizzaId7__41B8C09B");
 
                 entity.HasOne(d => d.PizzaId8Navigation)
                     .WithMany(p => p.OrderPizzaId8Navigation)
                     .HasForeignKey(d => d.PizzaId8)
-                    .HasConstraintName("FK__Order__PizzaID8__787EE5A0");
+                    .HasConstraintName("FK__Order__PizzaId8__42ACE4D4");
 
                 entity.HasOne(d => d.PizzaId9Navigation)
                     .WithMany(p => p.OrderPizzaId9Navigation)
                     .HasForeignKey(d => d.PizzaId9)
-                    .HasConstraintName("FK__Order__PizzaID9__797309D9");
+                    .HasConstraintName("FK__Order__PizzaId9__43A1090D");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Order)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__Order__UserID__70DDC3D8");
+                    .HasConstraintName("FK__Order__UserId__3B0BC30C");
             });
 
             modelBuilder.Entity<Pizza>(entity =>
             {
                 entity.ToTable("Pizza", "PizzaStore");
 
-                entity.Property(e => e.PizzaId).HasColumnName("PizzaID");
-
-                entity.Property(e => e.IngredientId1).HasColumnName("IngredientID1");
-
-                entity.Property(e => e.IngredientId2).HasColumnName("IngredientID2");
-
-                entity.Property(e => e.IngredientId3).HasColumnName("IngredientID3");
-
-                entity.Property(e => e.IngredientId4).HasColumnName("IngredientID4");
-
-                entity.Property(e => e.IngredientId5).HasColumnName("IngredientID5");
-
-                entity.Property(e => e.IngredientId6).HasColumnName("IngredientID6");
-
-                entity.Property(e => e.IngredientId7).HasColumnName("IngredientID7");
-
-                entity.Property(e => e.IngredientId8).HasColumnName("IngredientID8");
-
                 entity.HasOne(d => d.IngredientId1Navigation)
                     .WithMany(p => p.PizzaIngredientId1Navigation)
                     .HasForeignKey(d => d.IngredientId1)
-                    .HasConstraintName("FK__Pizza__Ingredien__66603565");
+                    .HasConstraintName("FK__Pizza__Ingredien__308E3499");
 
                 entity.HasOne(d => d.IngredientId2Navigation)
                     .WithMany(p => p.PizzaIngredientId2Navigation)
                     .HasForeignKey(d => d.IngredientId2)
-                    .HasConstraintName("FK__Pizza__Ingredien__6754599E");
+                    .HasConstraintName("FK__Pizza__Ingredien__318258D2");
 
                 entity.HasOne(d => d.IngredientId3Navigation)
                     .WithMany(p => p.PizzaIngredientId3Navigation)
                     .HasForeignKey(d => d.IngredientId3)
-                    .HasConstraintName("FK__Pizza__Ingredien__68487DD7");
+                    .HasConstraintName("FK__Pizza__Ingredien__32767D0B");
 
                 entity.HasOne(d => d.IngredientId4Navigation)
                     .WithMany(p => p.PizzaIngredientId4Navigation)
                     .HasForeignKey(d => d.IngredientId4)
-                    .HasConstraintName("FK__Pizza__Ingredien__693CA210");
+                    .HasConstraintName("FK__Pizza__Ingredien__336AA144");
 
                 entity.HasOne(d => d.IngredientId5Navigation)
                     .WithMany(p => p.PizzaIngredientId5Navigation)
                     .HasForeignKey(d => d.IngredientId5)
-                    .HasConstraintName("FK__Pizza__Ingredien__6A30C649");
+                    .HasConstraintName("FK__Pizza__Ingredien__345EC57D");
 
                 entity.HasOne(d => d.IngredientId6Navigation)
                     .WithMany(p => p.PizzaIngredientId6Navigation)
                     .HasForeignKey(d => d.IngredientId6)
-                    .HasConstraintName("FK__Pizza__Ingredien__6B24EA82");
+                    .HasConstraintName("FK__Pizza__Ingredien__3552E9B6");
 
                 entity.HasOne(d => d.IngredientId7Navigation)
                     .WithMany(p => p.PizzaIngredientId7Navigation)
                     .HasForeignKey(d => d.IngredientId7)
-                    .HasConstraintName("FK__Pizza__Ingredien__6C190EBB");
+                    .HasConstraintName("FK__Pizza__Ingredien__36470DEF");
 
                 entity.HasOne(d => d.IngredientId8Navigation)
                     .WithMany(p => p.PizzaIngredientId8Navigation)
                     .HasForeignKey(d => d.IngredientId8)
-                    .HasConstraintName("FK__Pizza__Ingredien__6D0D32F4");
+                    .HasConstraintName("FK__Pizza__Ingredien__373B3228");
             });
 
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("User", "PizzaStore");
 
-                entity.Property(e => e.UserId).HasColumnName("UserID");
+                entity.Property(e => e.FirstName)
+                    .IsRequired()
+                    .HasMaxLength(128);
 
-                entity.Property(e => e.DefaultLocationId).HasColumnName("DefaultLocationID");
-
-                entity.Property(e => e.Name)
+                entity.Property(e => e.LastName)
                     .IsRequired()
                     .HasMaxLength(128);
 
                 entity.HasOne(d => d.DefaultLocation)
                     .WithMany(p => p.User)
                     .HasForeignKey(d => d.DefaultLocationId)
-                    .HasConstraintName("FK__User__DefaultLoc__5AEE82B9");
+                    .HasConstraintName("FK__User__DefaultLoc__2AD55B43");
             });
         }
     }

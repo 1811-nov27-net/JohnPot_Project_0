@@ -28,6 +28,7 @@ namespace PizzaStoreLibrary.library
         // List of all ingredients required to make 
         //  the pizza.
         private readonly List<string> _ingredients = new List<string>();
+        private int id;
         #endregion
 
         #region Properties
@@ -36,6 +37,7 @@ namespace PizzaStoreLibrary.library
         {
             get => CalculatePizzaCost();
         }
+        public int Id { get => id; set => id = value; }
         #endregion
 
         #region Constructors
@@ -57,7 +59,7 @@ namespace PizzaStoreLibrary.library
 
                 // Going with all lowercase ingredients
                 //  standard for this project
-                AddToppingToPizza(ingredient.ToLower());
+                AddIngredientToPizza(ingredient.ToLower());
             }
         }
         public Pizza(List<string> ingredients)
@@ -67,11 +69,11 @@ namespace PizzaStoreLibrary.library
         #endregion
 
         #region Methods
-        public void AddToppingsToPizza(params string[] toppings)
+        public void AddIngredientsToPizza(params string[] toppings)
         {
             foreach (string topping in toppings)
             {
-                AddToppingToPizza(topping);
+                AddIngredientToPizza(topping);
             }
         }
         // Determine if the pizza is a proper pizza
@@ -120,7 +122,7 @@ namespace PizzaStoreLibrary.library
             }
             return totalIngredientCost + BasePizzaCost;
         }
-        private void AddToppingToPizza(string ingredient)
+        private void AddIngredientToPizza(string ingredient)
         {
             if (ValidateIngredient(ingredient) != InvalidIngredient)
                 Ingredients.Add(ingredient.ToLower());

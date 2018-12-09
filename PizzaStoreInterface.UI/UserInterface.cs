@@ -81,6 +81,10 @@ namespace PizzaStoreInterface.UI
             Console.WriteLine("***** Displaying order by most expensive *****");
             Console.WriteLine();
             store.DisplayOrderHistoryBy(userHistory, sortMethod);
+
+            string st = "PizzaId";
+            Console.WriteLine(st + 1);
+            Console.WriteLine(st);
         }
     }
 }
