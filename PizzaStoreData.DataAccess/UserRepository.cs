@@ -22,6 +22,15 @@ namespace PizzaStoreData.DataAccess
         {
             _db.Add(entity);
         }
+        public void Create(lib.User entity)
+        {
+            User dbUser = new User
+            {
+                FirstName = entity.FirstName,
+                LastName = entity.LastName
+            };
+            _db.Add(dbUser);
+        }
 
         public void Delete(User entity)
         {
@@ -31,6 +40,10 @@ namespace PizzaStoreData.DataAccess
         public User GetById(int id)
         {
             return _db.User.Find(id);
+        }
+        public User GetByName(string firstName, string lastName)
+        {
+            return _db.User.FirstOrDefault(u => u.FirstName == firstName && u.LastName == lastName);
         }
 
         public void SaveChanges()

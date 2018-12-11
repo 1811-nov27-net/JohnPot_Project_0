@@ -12,4 +12,12 @@ namespace PizzaStoreLibrary.library
         void Update(T entity);
         void SaveChanges();
     }
+    public interface IJunctionRepository<T1, T2, T3>
+    {
+        T1 GetById(int id);
+        void Update(T2 entity1, T3 entity2);
+        void Create(T2 entity1, T3 entity2);
+        void Delete(T2 entity1, T3 entity2);
+        void SaveChanges();
+    }
 }

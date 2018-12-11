@@ -38,7 +38,7 @@ namespace PizzaStoreData.DataAccess
                 entity.ToTable("Ingredient", "PizzaStore");
 
                 entity.HasIndex(e => e.Name)
-                    .HasName("UQ__Ingredie__737584F642CEDF62")
+                    .HasName("UQ__Ingredie__737584F64DCDCAA9")
                     .IsUnique();
 
                 entity.Property(e => e.Name)
@@ -56,13 +56,13 @@ namespace PizzaStoreData.DataAccess
                     .WithMany(p => p.Inventory)
                     .HasForeignKey(d => d.IngredientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Inventory__Ingre__2F650636");
+                    .HasConstraintName("FK__Inventory__Ingre__65C116E7");
 
                 entity.HasOne(d => d.Location)
                     .WithMany(p => p.Inventory)
                     .HasForeignKey(d => d.LocationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Inventory__Locat__2E70E1FD");
+                    .HasConstraintName("FK__Inventory__Locat__64CCF2AE");
             });
 
             modelBuilder.Entity<Location>(entity =>
@@ -83,12 +83,12 @@ namespace PizzaStoreData.DataAccess
                 entity.HasOne(d => d.Location)
                     .WithMany(p => p.Order)
                     .HasForeignKey(d => d.LocationId)
-                    .HasConstraintName("FK__Order__LocationI__37FA4C37");
+                    .HasConstraintName("FK__Order__LocationI__6E565CE8");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Order)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__Order__UserId__38EE7070");
+                    .HasConstraintName("FK__Order__UserId__6F4A8121");
             });
 
             modelBuilder.Entity<Pizza>(entity =>
@@ -101,7 +101,7 @@ namespace PizzaStoreData.DataAccess
                     .WithMany(p => p.Pizza)
                     .HasForeignKey(d => d.IngredientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Pizza__Ingredien__351DDF8C");
+                    .HasConstraintName("FK__Pizza__Ingredien__6B79F03D");
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -119,7 +119,7 @@ namespace PizzaStoreData.DataAccess
                 entity.HasOne(d => d.DefaultLocation)
                     .WithMany(p => p.User)
                     .HasForeignKey(d => d.DefaultLocationId)
-                    .HasConstraintName("FK__User__DefaultLoc__324172E1");
+                    .HasConstraintName("FK__User__DefaultLoc__689D8392");
             });
         }
     }

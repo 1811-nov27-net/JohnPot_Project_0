@@ -15,6 +15,11 @@ namespace PizzaStoreLibrary.library
         public List<User> UserList { get => _userList; }
         public List<Location> LocationList { get => _locationList; }
 
+        public Location GetLocationByName(string name)
+        {
+            return LocationList.Find(l => l.Name == name);
+        }
+
         public User RegisterNewUser(User user)
         {
             if (user == null)

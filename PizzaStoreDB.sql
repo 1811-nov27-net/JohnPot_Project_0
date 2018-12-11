@@ -62,26 +62,7 @@ DROP TABLE PizzaStore.Inventory
 DROP TABLE PizzaStore.[Location]
 DROP TABLE PizzaStore.Ingredient
 
-INSERT INTO PizzaStore.Ingredient (Name, Cost) 
-    VALUES ('Cheese', 2.0)
+INSERT INTO PizzaStore.User(FirstName, LastName)
+    VALUES('Default', 'Default')
 
-INSERT INTO PizzaStore.[Location] (Name)
-    VALUES ('John''s Pizzaria')
-
-TRUNCATE TABLE PizzaStore.[Location]
-
-SELECT * FROM PizzaStore.[Location]
-
-INSERT INTO PizzaStore.Inventory (LocationId, IngredientId, [Count])
-    VALUES (1, 1, 100)
-
-SELECT * FROM PizzaStore.Inventory AS inventory
-    INNER JOIN PizzaStore.Ingredient AS ingredient ON ingredient.IngredientID = inventory.IngredientId
-
-SELECT * FROM PizzaStore.Ingredient
-
-
-INSERT INTO PizzaStore.Ingredient (Name, Cost)
-    VALUES("Cheese", 1.0)
-    
-DELETE FROM PizzaStore.Ingredient
+SELECT * FROM PizzaStore.[User]
