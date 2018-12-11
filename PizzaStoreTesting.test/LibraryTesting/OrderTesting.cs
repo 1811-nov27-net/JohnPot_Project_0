@@ -122,7 +122,7 @@ namespace PizzaStoreTesting.test
                 // TODO: Figure out some TimeSpan epsilon or something
                 //  to properly test this.
                 //TimeSpan currentTime = DateTime.Now.TimeOfDay;
-                //Assert.True((currentTime - order1.OrderTime) == TimeSpan.Zero 
+                //Assert.True((currentTime - order1.TimePlaced) == TimeSpan.Zero 
                 //            == expectedTimeIsNow);
             }
 

@@ -14,7 +14,7 @@ namespace PizzaStoreLibrary.library
         // has a user
         private User _user;
         // has an order time (when the order was placed)
-        private TimeSpan _orderTime;
+        private DateTime _TimePlaced;
         // can have at most 12 pizzas
         private List<Pizza> _pizzas;
 
@@ -26,7 +26,7 @@ namespace PizzaStoreLibrary.library
 
         public Location Location { get => _location; set => _location = value; }
         public User User { get => _user; set => _user = value; }
-        public TimeSpan OrderTime { get => _orderTime; set => _orderTime = value; }
+        public DateTime TimePlaced { get => _TimePlaced; set => _TimePlaced = value; }
         public List<Pizza> PizzaList { get => _pizzas; }
         // total value cannot exceed $500
         public float Cost
@@ -64,7 +64,7 @@ namespace PizzaStoreLibrary.library
         public Order(User user)
         {
             User = user;
-            _orderTime = new TimeSpan();
+            _TimePlaced = new DateTime();
             _pizzas = new List<Pizza>();
         }
         public Order(params string[] user)
@@ -148,7 +148,7 @@ namespace PizzaStoreLibrary.library
             Console.WriteLine($"Total Cost: {Cost}");
             Console.WriteLine($"Location: {Location?.Name}");
             Console.WriteLine($"User: {User.FirstName} {User.LastName}");
-            Console.WriteLine($"Time Placed: {OrderTime}");
+            Console.WriteLine($"Time Placed: {TimePlaced}");
             Console.WriteLine($"Pizzas: ({PizzaList.Count} total for this order)");
             for (int i = 0; i < PizzaList.Count; i++)
             {

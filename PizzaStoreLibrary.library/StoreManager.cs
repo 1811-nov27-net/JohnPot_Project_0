@@ -66,7 +66,7 @@ namespace PizzaStoreLibrary.library
         {
             List<Order> userOrderHistory = GetUserHistory(user);
 
-            return userOrderHistory.OrderBy(o => o.OrderTime).FirstOrDefault();
+            return userOrderHistory.OrderBy(o => o.TimePlaced).FirstOrDefault();
 
         }
 

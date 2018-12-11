@@ -1,75 +1,87 @@
 CREATE SCHEMA PizzaStore
 
 GO
+-- Table of all available ingredients and 
+--  their respective costs
+CREATE TABLE PizzaStore.Ingredient
+(
+    IngredientId INT IDENTITY PRIMARY KEY NOT NULL,
+    Name NVARCHAR(128) UNIQUE NOT NULL,
+    -- Cost of ingredient to add to pizza
+    Cost FLOAT NOT NULL 
+)
+
 -- Table of all locations
 CREATE TABLE PizzaStore.[Location]
 (
-    LocationId INT IdENTITY PRIMARY KEY NOT NULL,
+    LocationId INT IDENTITY PRIMARY KEY NOT NULL,
     Name NVARCHAR(128) NOT NULL
+)
+
+CREATE TABLE PizzaStore.Inventory
+(
+    LocationId INT FOREIGN KEY REFERENCES PizzaStore.[Location] (LocationId),
+    IngredientId INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientID),
+    [Count] INT,
+    CONSTRAINT PK_Inventory PRIMARY KEY (LocationId, IngredientId)
 )
 
 -- Table of all users
 CREATE TABLE PizzaStore.[User]
 (
-    UserId INT IdENTITY PRIMARY KEY NOT NULL,
+    UserId INT IDENTITY PRIMARY KEY NOT NULL,
     FirstName NVARCHAR(128) NOT NULL,
     LastName NVARCHAR(128) NOT NULL,
     DefaultLocationId INT FOREIGN KEY REFERENCES PizzaStore.[Location] (LocationId)
 )
 
--- Table of all available ingredients
---  (It's the locations job to keep track
---    of how many of each ingredient it has.
---    this is just a table of possible ones
---    it can have and the cost of it.)
-CREATE TABLE PizzaStore.Ingredient
-(
-    IngredientId INT IdENTITY PRIMARY KEY NOT NULL,
-    Name NVARCHAR(128) UNIQUE NOT NULL,
-    -- Cost of ingredient to add to pizza
-    Cost FLOAT NOT NULL
-)
-
 -- Table of pizzas that have been ordered.
---  Pizza contains ingredients to create za
 CREATE TABLE PizzaStore.Pizza
 (
-    PizzaId INT IdENTITY PRIMARY KEY NOT NULL,
-    -- Maximum of 8 toppings per pizza
-    IngredientId1 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientId),
-    IngredientId2 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientId),
-    IngredientId3 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientId),
-    IngredientId4 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientId),
-    IngredientId5 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientId),
-    IngredientId6 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientId),
-    IngredientId7 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientId),
-    IngredientId8 INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientId),
+    PizzaId INT,
+    IngredientId INT FOREIGN KEY REFERENCES PizzaStore.Ingredient (IngredientId),
+    [Count] INT,
+    CONSTRAINT PK_Pizza PRIMARY KEY (PizzaId, IngredientId)
 )
 
 -- Table of all placed orders.
 CREATE TABLE PizzaStore.[Order]
 (
-    OrderId    INT IdENTITY PRIMARY KEY NOT NULL,
+    OrderId    INT NOT NULL,
     LocationId INT FOREIGN KEY REFERENCES PizzaStore.[Location] (LocationId),
     UserId     INT FOREIGN KEY REFERENCES PizzaStore.[User] (UserId),
     TimePlaced DATETIME2 NOT NULL,
-    -- Maximum of 12 pizzas per order
-    PizzaId1  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
-    PizzaId2  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
-    PizzaId3  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
-    PizzaId4  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
-    PizzaId5  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
-    PizzaId6  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
-    PizzaId7  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
-    PizzaId8  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
-    PizzaId9  INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
-    PizzaId10 INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
-    PizzaId11 INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId),
-    PizzaId12 INT FOREIGN KEY REFERENCES PizzaStore.Pizza (PizzaId)
+    PizzaId    INT,
+    CONSTRAINT PK_Order PRIMARY KEY (OrderId, PizzaId)
 )
 
-DROP TABLE PizzaStore.[ORDER]
-DROP TABLE PizzaStore.Pizza
-DROP TABLE PizzaStore.Ingredient
+DROP TABLE PizzaStore.[Order]
 DROP TABLE PizzaStore.[User]
+DROP TABLE PizzaStore.Pizza
+DROP TABLE PizzaStore.Inventory
 DROP TABLE PizzaStore.[Location]
+DROP TABLE PizzaStore.Ingredient
+
+INSERT INTO PizzaStore.Ingredient (Name, Cost) 
+    VALUES ('Cheese', 2.0)
+
+INSERT INTO PizzaStore.[Location] (Name)
+    VALUES ('John''s Pizzaria')
+
+TRUNCATE TABLE PizzaStore.[Location]
+
+SELECT * FROM PizzaStore.[Location]
+
+INSERT INTO PizzaStore.Inventory (LocationId, IngredientId, [Count])
+    VALUES (1, 1, 100)
+
+SELECT * FROM PizzaStore.Inventory AS inventory
+    INNER JOIN PizzaStore.Ingredient AS ingredient ON ingredient.IngredientID = inventory.IngredientId
+
+SELECT * FROM PizzaStore.Ingredient
+
+
+INSERT INTO PizzaStore.Ingredient (Name, Cost)
+    VALUES("Cheese", 1.0)
+    
+DELETE FROM PizzaStore.Ingredient

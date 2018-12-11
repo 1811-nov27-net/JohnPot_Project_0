@@ -29,26 +29,26 @@ namespace PizzaStoreInterface.UI
                 Order bulkOrder = new Order(John1, l);
                 bulkOrder.AddPizzaToOrder("Cheese");
                 bool orderPlaced = store.PlaceOrder(bulkOrder);
-                bulkOrder.OrderTime -= new TimeSpan(3 + i, 0, 0);
+                bulkOrder.TimePlaced -= new TimeSpan(3 + i, 0, 0);
             }
             // Add a couple of different pizzas in the mix...
             Order o = new Order(John1, l);
             o.AddPizzaToOrder("Olives", "Pepperoni");
             o.AddPizzaToOrder("Olives", "Cheese");
             bool b = store.PlaceOrder(o);
-            o.OrderTime -= new TimeSpan(5, 0, 0);
+            o.TimePlaced -= new TimeSpan(5, 0, 0);
             Order p = new Order(John1, l);
             p.AddPizzaToOrder("Pineapple", "Pepperoni");
             p.AddPizzaToOrder("Olives", "Cheese");
             p.AddPizzaToOrder("Olives", "Cheese");
             store.PlaceOrder(p);
-            p.OrderTime -= new TimeSpan(8, 0, 0);
+            p.TimePlaced -= new TimeSpan(8, 0, 0);
 
             List<Order> userHistory = store.GetUserHistory(John1);
 
             Comparison<Order> sortMethod = delegate (Order o1, Order o2)
             {
-                return o1.OrderTime.CompareTo(o2.OrderTime);
+                return o1.TimePlaced.CompareTo(o2.TimePlaced);
             };
 
             Console.WriteLine("***** Displaying order by earliest ******" );
@@ -57,7 +57,7 @@ namespace PizzaStoreInterface.UI
 
             sortMethod = delegate (Order o1, Order o2)
             {
-                return -o1.OrderTime.CompareTo(-o2.OrderTime);
+                return -o1.TimePlaced.TimeOfDay.CompareTo(-o2.TimePlaced.TimeOfDay);
             };
 
             Console.WriteLine("***** Displaying order by latest *****");

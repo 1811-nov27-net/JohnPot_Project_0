@@ -75,8 +75,8 @@ namespace PizzaStoreLibrary.library
             Order pastOrder = GetLastOrder(order.User);
             if(pastOrder != null)
             {
-                TimeSpan currentTime = DateTime.Now.TimeOfDay;
-                TimeSpan elapsedTime = currentTime - pastOrder.OrderTime;
+                DateTime currentTime = DateTime.Now;
+                TimeSpan elapsedTime = currentTime.TimeOfDay - pastOrder.TimePlaced.TimeOfDay;
                 if (elapsedTime.Hours < 2)
                     return false;
             }
@@ -110,7 +110,7 @@ namespace PizzaStoreLibrary.library
             }
 
             order.SetOrderLocation(this);
-            order.OrderTime = DateTime.Now.TimeOfDay;
+            order.TimePlaced = DateTime.Now;
             OrderHistory.Push(order);
 
             return true;

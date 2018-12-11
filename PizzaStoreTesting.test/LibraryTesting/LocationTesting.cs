@@ -308,7 +308,7 @@ namespace PizzaStoreTesting.test
                 if(orderPlaced)
                 {
                     TimeSpan threeHours = new TimeSpan(3, 0, 0);
-                    o.OrderTime -= threeHours;
+                    o.TimePlaced -= threeHours;
                 }
             }
 
@@ -380,7 +380,7 @@ namespace PizzaStoreTesting.test
                 if (orderPlaced)
                 {
                     TimeSpan threeHours = new TimeSpan(3, 0, 0);
-                    o.OrderTime -= threeHours;
+                    o.TimePlaced -= threeHours;
                 }
             }
             // Place a dummy order to differentiate between

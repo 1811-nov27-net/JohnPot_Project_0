@@ -237,7 +237,7 @@ namespace PizzaStoreTesting.test
             bool firstOrder = location1.PlaceOrder(order1);
             // Act like the order was placed 3 hours ago...
             TimeSpan threeHours = new TimeSpan(3, 0, 0);
-            order1.OrderTime -= threeHours;
+            order1.TimePlaced -= threeHours;
             // Place a new order after three hours. Should succeed
             bool secondOrder = location1.PlaceOrder(order2);
 
