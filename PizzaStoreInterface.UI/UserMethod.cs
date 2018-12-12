@@ -41,7 +41,8 @@ namespace PizzaStoreInterface.UI
             InsufficientIngredients,
             CostTooMuch,
             SwitchedUsers,
-            UserExists
+            UserExists,
+            OrderTooSoon
         }
 
         private void GenerateResponses()
@@ -67,6 +68,7 @@ namespace PizzaStoreInterface.UI
             MethodResponse[Responses.NoInventoryCreated] = "No inventory for location/ingredient was found.";
             MethodResponse[Responses.ToppingExists] = "Topping already exists!";
             MethodResponse[Responses.UserExists] = "That user already exists!";
+            MethodResponse[Responses.OrderTooSoon] = "Must wait at least 2 hours to order from same location. Last order placed: ";
         }
 
         private void SyncStoreToDB()
@@ -123,6 +125,116 @@ namespace PizzaStoreInterface.UI
         {
             // TODO: Better input checks here...
             return input.ToLower();
+        }
+
+
+        public string startorder2(string LocationName)
+        {
+
+            db.Location dbLocation = new db.Location() { Name = LocationName };
+            // This is just silly... but time is a thing.
+            dbLocation = db.Mapper.GetLocationById(db.Mapper.GetLocationIdByName(LocationName, _options), _options);
+            // Make sure the location is valid
+            if (dbLocation.LocationId == -1)
+                return MethodResponse[Responses.InvalidLocationName] + LocationName;
+            // 2 hour rule
+            {
+                List<db.Order> dbOrders = repo.orderRepository.GetAllOrders();
+                List<lib.Order> libOrders = ConcatDBOrders(dbOrders);
+                lib.Order mostRecent = libOrders.Where(o => o.User.Id == currentUser.Id)
+                        .Where(o => o.Location.Id == dbLocation.LocationId).OrderBy(o => o.TimePlaced).First();
+                if(DateTime.Now.TimeOfDay - mostRecent.TimePlaced.TimeOfDay < new TimeSpan(2, 0, 0))
+                {
+                    return MethodResponse[Responses.OrderTooSoon] + mostRecent.TimePlaced.ToShortTimeString();
+                }
+            }
+
+            lib.Order libOrder = new lib.Order(currentUser);
+            libOrder.Location = db.Mapper.Map(dbLocation, _options);
+            string orderInput = "";
+            while (orderInput != "No" && orderInput != "no")
+            {
+                string input = "";
+                lib.Pizza libPizza = new lib.Pizza();
+                while (input != "end")
+                {
+                    Console.WriteLine("Enter topping to add to pizza: (Enter 'end' to finish pizza)");
+                    input = Console.ReadLine();
+                    input = SanitizeToppingInput(input);
+                    if (!lib.IngredientValidator.IsValidIngredient(input) && input != "end")
+                    {
+                        Console.WriteLine(MethodResponse[Responses.InvalidPizzaTopping]);
+                        continue;
+                    }
+
+                    // Attempt to add the topping to a pizza
+                    libPizza.AddIngredientsToPizza(input);
+                    libPizza.Display();
+                }
+                int added = libOrder.AddPizzaToOrder(libPizza);
+                if (added == -1)
+                {
+                    Console.WriteLine(MethodResponse[Responses.CostTooMuch]);
+                }
+                else if (added == -3)
+                {
+                    Console.WriteLine(MethodResponse[Responses.TooManyPizzas]);
+                }
+                libOrder.Display();
+                Console.WriteLine("Add another pizza to the order? (Yes / No)");
+                orderInput = Console.ReadLine();
+                while (orderInput != "Yes" && orderInput != "yes" &&
+                       orderInput != "No" && orderInput != "no")
+                {
+                    Console.WriteLine(MethodResponse[Responses.InvalidInput]);
+                    Console.WriteLine("Add another pizza to the order? (Yes / No)");
+                    orderInput = Console.ReadLine();
+                }
+            }
+
+            libOrder.Location = db.Mapper.Map(dbLocation, _options);
+            libOrder.User = currentUser;
+            int orderPlaced = libOrder.Location.PlaceOrder(libOrder);
+            if (orderPlaced < 0)
+            {
+                switch (orderPlaced)
+                {
+                    case -1:
+                        {
+                            return MethodResponse[Responses.MustWaitLonger];
+                            break;
+                        }
+                    case -2:
+                        {
+                            return MethodResponse[Responses.InsufficientIngredients];
+                            break;
+                        }
+                    case -3:
+                        {
+                            return MethodResponse[Responses.TooManyPizzas];
+                            break;
+                        }
+                    default:
+                        return "Something went wrong while placing the order.";
+
+                }
+            }
+
+            foreach (lib.Pizza p in libOrder.PizzaList)
+            {
+                repo.pizzaRepository.Create(p);
+            }
+            repo.orderRepository.Create(libOrder);
+
+            foreach (var i in libOrder.Location.Inventory)
+            {
+                db.Inventory inventory = repo.inventoryRepository.GetById(libOrder.Location.Id, db.Mapper.GetIngredientByName(i.Key, _options).IngredientId);
+                inventory.Count = i.Value;
+                repo.inventoryRepository.Update(inventory);
+            }
+            repo.locationRepository.Update(libOrder.Location);
+
+            return MethodResponse[Responses.OrderPlaced];
         }
 
         public string startorder(string LocationName)
@@ -315,9 +427,8 @@ namespace PizzaStoreInterface.UI
             List<lib.Order> result = new List<lib.Order>();
             List<int> orderIds = dbOrders.Select(o => o.OrderId).Distinct().ToList();
             foreach (int id in orderIds)
-            {
                 result.Add(db.Mapper.Map(dbOrders.Where(o => o.OrderId == id).ToList(), _options));
-            }
+
             return result;
         }
 
