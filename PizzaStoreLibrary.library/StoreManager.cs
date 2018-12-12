@@ -15,6 +15,15 @@ namespace PizzaStoreLibrary.library
         public List<User> UserList { get => _userList; }
         public List<Location> LocationList { get => _locationList; }
 
+        public void UpdateUserList(List<User> users)
+        {
+            UserList.AddRange(users);
+        }
+        public void UpdateLocationList(List<Location> locations)
+        {
+            LocationList.AddRange(locations);
+        }
+
         public Location GetLocationByName(string name)
         {
             return LocationList.Find(l => l.Name == name);
@@ -75,13 +84,13 @@ namespace PizzaStoreLibrary.library
 
         }
 
-        public bool PlaceOrder(Order o)
+        public int PlaceOrder(Order o)
         {
-            if (o.IsValid())
+            if (o.IsValid() > 0)
             {
                 return o.Location.PlaceOrder(o);
             }
-            return false;
+            return -3;
         }
 
 

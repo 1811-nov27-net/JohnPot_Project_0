@@ -2,6 +2,7 @@
 using Xunit;
 using PizzaStoreLibrary.library;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PizzaStoreTesting.test
 {
@@ -132,13 +133,6 @@ namespace PizzaStoreTesting.test
         [InlineData(false,
                     new string[] { "" })]
         // Try to order too many pizzas (13)
-        //  TODO: Should we create orders that 
-        //   have too many pizzas and reject the 
-        //   order at the location or just cap
-        //   the number of pizzas added while we
-        //   are composing the order... Currently
-        //   using the latter so this will successfully
-        //   place an order for 12 pizzas, excluding the 13th
         [InlineData(true,
                     new string[] { "Cheese" },
                     new string[] { "Cheese" },
@@ -168,10 +162,10 @@ namespace PizzaStoreTesting.test
 
 
             // Act
-            bool orderPlaced = location.PlaceOrder(order1);
+            int orderPlaced = location.PlaceOrder(order1);
 
             // Assert
-            Assert.True(orderPlaced == expected);
+            Assert.True((orderPlaced>0) == expected);
         }
 
 
@@ -198,21 +192,21 @@ namespace PizzaStoreTesting.test
 
             // Act
             // Placing first order at first location should be successful
-            bool firstOrder = location1.PlaceOrder(order1);
+            int firstOrder = location1.PlaceOrder(order1);
             // A second (different) order should be rejected
-            bool SecondOrder = location1.PlaceOrder(order2);
+            int SecondOrder = location1.PlaceOrder(order2);
             // Placing an order at a new location should be successful
-            bool ThirdOrder = location2.PlaceOrder(order1);
+            int ThirdOrder = location2.PlaceOrder(order1);
             // Just for completeness lets test placing another
             //  order at the second location before enough time has
             //  elapsed
-            bool FourthOrder = location2.PlaceOrder(order2);
+            int FourthOrder = location2.PlaceOrder(order2);
 
             // Assert
-            Assert.True(firstOrder);
-            Assert.False(SecondOrder);
-            Assert.True(ThirdOrder);
-            Assert.False(FourthOrder);
+            Assert.True(firstOrder>0);
+            Assert.False(SecondOrder>0);
+            Assert.True(ThirdOrder>0);
+            Assert.False(FourthOrder>0);
 
 
         }
@@ -234,16 +228,16 @@ namespace PizzaStoreTesting.test
 
             // Act
             // Placing first order at first location should be successful
-            bool firstOrder = location1.PlaceOrder(order1);
+            int firstOrder = location1.PlaceOrder(order1);
             // Act like the order was placed 3 hours ago...
             TimeSpan threeHours = new TimeSpan(3, 0, 0);
             order1.TimePlaced -= threeHours;
             // Place a new order after three hours. Should succeed
-            bool secondOrder = location1.PlaceOrder(order2);
+            int secondOrder = location1.PlaceOrder(order2);
 
             // Assert
-            Assert.True(firstOrder);
-            Assert.True(secondOrder);
+            Assert.True(firstOrder>0);
+            Assert.True(secondOrder>0);
 
 
         }

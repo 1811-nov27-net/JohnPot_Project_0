@@ -19,7 +19,8 @@ namespace PizzaStoreTesting.test.DataAccessTesting
                     .UseInMemoryDatabase("Pizza_Mapping_Test1").Options;
 
             // Create lib.Pizza to later map to db.Pizza
-            lib.Pizza libPizza = new lib.Pizza("cheese", "pepperoni");
+
+            lib.Pizza libPizza = new lib.Pizza();
             libPizza.Id = 1;
 
             using (var database = new db.PizzaStoreContext(options))
@@ -35,6 +36,7 @@ namespace PizzaStoreTesting.test.DataAccessTesting
                 database.Add(new db.Pizza { PizzaId = 1, IngredientId =  2, Count = 1});
 
                 database.SaveChanges();
+                libPizza.AddIngredientsToPizza("cheese", "pepperoni");
             }
 
             // Act

@@ -1,6 +1,7 @@
 ﻿using PizzaStoreLibrary.library;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace PizzaStoreTesting.test
@@ -113,11 +114,11 @@ namespace PizzaStoreTesting.test
             }
 
             // Act
-            bool orderPlaced = location.PlaceOrder(order1);
+            int orderPlaced = location.PlaceOrder(order1);
 
 
             // Assert
-            if(orderPlaced)
+            if(orderPlaced > 0)
             {
                 // TODO: Figure out some TimeSpan epsilon or something
                 //  to properly test this.
@@ -174,6 +175,11 @@ namespace PizzaStoreTesting.test
         {
             // Arrange
             Order order1 = new Order(user);
+            List<string> validIngredients = new List<string>();
+            validIngredients.Add("Cheese");
+            validIngredients.Add("Olives");
+            validIngredients.Add("Pepperoni");
+
             if (pizzas != null)
             {
                 foreach (string[] pizza in pizzas)
@@ -238,6 +244,11 @@ namespace PizzaStoreTesting.test
         {
             // Arrange
             Order order1 = new Order(user);
+            List<string> validIngredients = new List<string>();
+            validIngredients.Add("Cheese");
+            validIngredients.Add("Olives");
+            validIngredients.Add("Pepperoni");
+
             foreach (string[] pizza in pizzas)
             {
                 order1.AddPizzaToOrder(pizza);
@@ -258,6 +269,11 @@ namespace PizzaStoreTesting.test
         {
             // Arrange
             Order order1 = new Order(new string[] { "John", "Pot" });
+
+            List<string> validIngredients = new List<string>();
+            validIngredients.Add("Cheese");
+            validIngredients.Add("Olives");
+            validIngredients.Add("Pepperoni");
 
             Pizza reallyExpensivePizza = new Pizza();
             // Create a $100 pizza ($10 base + 90-$1 toppings)

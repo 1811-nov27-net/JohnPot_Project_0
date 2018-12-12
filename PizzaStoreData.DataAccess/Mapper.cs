@@ -19,7 +19,16 @@ namespace PizzaStoreData.DataAccess
 
             lib.Location libLocation = new lib.Location(location.Name);
             libLocation.Id = location.LocationId;
-            return libLocation;
+            // Stock the location
+            using (var database = new PizzaStoreContext(options))
+            {
+                foreach(Inventory i in database.Inventory.Where(inv => inv.LocationId == libLocation.Id))
+                {
+                    libLocation.StockInventory(new KeyValuePair<string, int>(GetIngredientById(i.IngredientId, options).Name, (int)i.Count));
+                }
+            }
+
+                return libLocation;
         }
         public static Location Map(lib.Location location, DbContextOptions<PizzaStoreContext> options)
         {
@@ -63,6 +72,13 @@ namespace PizzaStoreData.DataAccess
             }
 
             return -1;
+        }
+        public static Location GetLocationByName(string name, DbContextOptions<PizzaStoreContext> options)
+        {
+            using (var database = new PizzaStoreContext(options))
+            {
+                return database.Location.FirstOrDefault(l => l.Name == name);
+            }
         }
         #endregion
 
@@ -201,7 +217,8 @@ namespace PizzaStoreData.DataAccess
                 return null;
 
             Location dbLocation = GetLocationById(order[0].LocationId, options);
-            lib.Order resultOrder = new lib.Order(order[0].User.FirstName, order[0].User.LastName);
+            User dbUser = GetUserById(order[0].UserId, options);
+            lib.Order resultOrder = new lib.Order(dbUser.FirstName, dbUser.LastName);
             resultOrder.Location = Map(dbLocation, options);
             resultOrder.Id = order[0].OrderId;
             resultOrder.User = Map(GetUserById(order[0].UserId, options), options);
@@ -210,6 +227,7 @@ namespace PizzaStoreData.DataAccess
             // Need to set all pizzas for the order
             using (var db = new PizzaStoreContext(options))
             {
+                List<string> validIngredients = db.Ingredient.Select(i => i.Name).ToList();
                 // Grab all pizzas from the matching orders
                 foreach (Order dbOrder in order)
                 {
@@ -241,6 +259,14 @@ namespace PizzaStoreData.DataAccess
             return resultOrder;
         }
 
+        public static Inventory GetInventoryById(int locationId, int ingredientId, DbContextOptions<PizzaStoreContext> options)
+        {
+            using (var database = new PizzaStoreContext(options))
+            {
+                return database.Inventory.FirstOrDefault(i => i.LocationId == locationId && i.IngredientId == ingredientId);
+            }
+        }
+
         public static List<Order> Map(lib.Order order, DbContextOptions<PizzaStoreContext> options)
         {
             List<Pizza> dbPizzaList = new List<Pizza>();
@@ -255,7 +281,7 @@ namespace PizzaStoreData.DataAccess
                 Order o = new Order();
                 o.LocationId = order.Location.Id;
                 o.UserId = order.User.Id;
-                o.OrderId = order.Id;
+                //o.OrderId = order.Id;
                 o.PizzaId = p.PizzaId;
                 o.TimePlaced = order.TimePlaced;
                 resultOrderList.Add(o);

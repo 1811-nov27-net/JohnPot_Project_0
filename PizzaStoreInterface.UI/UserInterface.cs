@@ -20,7 +20,17 @@ namespace PizzaStoreInterface.UI
 
             Repo repo = new Repo(options);
             UserMethod userInterface = new UserMethod(options);
-            
+
+            // Populate the ingredient validator
+            using (var database = new db.PizzaStoreContext(options))
+            {
+                List<db.Ingredient> ingredients = database.Ingredient.ToList();
+                foreach (db.Ingredient ingredient in ingredients)
+                {
+                    lib.IngredientValidator.AddIngredient(new KeyValuePair<string, float>(ingredient.Name, (float)ingredient.Cost));
+                }
+            }
+
             Console.WriteLine("Welcome to John's Pizza Management!");
 
             lib.Location currentLocation = null;
@@ -39,7 +49,7 @@ namespace PizzaStoreInterface.UI
 
             if (dbUser != null)
             {
-                Console.WriteLine($"Welcome back {firstName}!");
+                Console.WriteLine($"Welcome back, {firstName}!");
                 currentUser = db.Mapper.Map(dbUser, options);
             }
             else
@@ -49,6 +59,8 @@ namespace PizzaStoreInterface.UI
                 repo.SaveAll();
             }
 
+            userInterface.currentUser = currentUser;
+
             // While true... Lol. 
             while (true)
             {
@@ -56,13 +68,31 @@ namespace PizzaStoreInterface.UI
                 string input;
                 input = Console.ReadLine();
 
+                if(input == "Exit" || input == "exit")
+                {
+                    Console.WriteLine($"Goodbye, {currentUser.FirstName}");
+                    return;
+                }
                 // Process input
                 input = userInterface.SanitizeInput(input);
-                if (input != null)
+                if (input != userInterface.MethodResponse[UserMethod.Responses.InvalidInput])
                 {
-                    object[] parameters = new object[] { input };
-                    string output = (string)userInterface.GetType().GetMethod(input).Invoke(userInterface, parameters);
+                    List<string> parameters = new List<string>();
+                    // Retrieve the parameters
+                    var methodParameters = userInterface.GetType().GetMethod(input).GetParameters();
+                    foreach (var param in methodParameters)
+                    {
+                        Console.WriteLine(param.Name + "?");
+                        parameters.Add(Console.ReadLine());
+                    }
+
+                    string output = (string)userInterface.GetType().GetMethod(input).Invoke(userInterface, parameters.ToArray());
+                    repo.SaveAll();
                     Console.WriteLine(output);
+                }
+                else
+                {
+                    Console.WriteLine(input);
                 }
             }
         }

@@ -38,12 +38,16 @@ namespace PizzaStoreLibrary.library
             get => CalculatePizzaCost();
         }
         public int Id { get => id; set => id = value; }
+
         #endregion
 
         #region Constructors
         public Pizza() { }
         public Pizza(params string[] ingredients)
         {
+            //Random rand = new Random(DateTime.Now.TimeOfDay.Milliseconds);
+            //Id = rand.Next();
+
             if (ingredients.Length == 0 || ingredients == null)
                 return;
             
@@ -85,29 +89,31 @@ namespace PizzaStoreLibrary.library
 
             return true;
         }
-        // TODO: Serialize list of ingredients that 
-        //  can be considered valid.
         // Method checks to see if ingredient 
         //  is on the list of ingredients 
         public static string ValidateIngredient(string ingredient)
         {
+            bool isvalid = IngredientValidator.IsValidIngredient(ingredient);
+
             if (ingredient.EndsWith("s"))
                 ingredient = ingredient.Remove(ingredient.Length - 1);
 
-            if (IngredientList.ContainsKey(ingredient.ToLower()))
+            if (isvalid)
                 return ingredient.ToLower();
 
             return InvalidIngredient;
         }
         public void Display()
         {
-            Console.Write("Pizza: ");
+            Console.Write("Pizza Toppings: ");
             for (int i = 0; i < Ingredients.Count; i++)
             {
                 Console.Write(Ingredients[i]);
                 if(i != Ingredients.Count - 1)
                     Console.Write(", ");
             }
+            Console.WriteLine();
+            Console.Write($"Pizza Cost: {Cost}");
             Console.WriteLine();
         }
         #endregion  
@@ -118,14 +124,22 @@ namespace PizzaStoreLibrary.library
             float totalIngredientCost = 0.0f;
             foreach (string ingredient in Ingredients)
             {
-                totalIngredientCost += IngredientList[ingredient];
+                totalIngredientCost += IngredientValidator.GetIngredientCost(ingredient);
             }
             return totalIngredientCost + BasePizzaCost;
         }
-        private void AddIngredientToPizza(string ingredient)
+        private bool AddIngredientToPizza(string ingredient)
         {
             if (ValidateIngredient(ingredient) != InvalidIngredient)
+            {
+                if (ingredient.EndsWith("s"))
+                    ingredient = ingredient.Remove(ingredient.Length - 1);
+
                 Ingredients.Add(ingredient.ToLower());
+                return true;
+            }
+            return false;
+
         }
         #endregion
 

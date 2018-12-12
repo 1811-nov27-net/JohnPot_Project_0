@@ -20,6 +20,9 @@ namespace PizzaStoreLibrary.library
 
         private int id;
 
+        // For generating pizza ids
+        private Random rand;
+
         #endregion
 
         #region Properties
@@ -45,6 +48,7 @@ namespace PizzaStoreLibrary.library
 
         public int Id { get => id; set => id = value; }
 
+
         #endregion
 
         #region Constructors
@@ -63,6 +67,9 @@ namespace PizzaStoreLibrary.library
         //  each variant of constructors
         public Order(User user)
         {
+            rand = new Random(DateTime.Now.TimeOfDay.Milliseconds * DateTime.Now.TimeOfDay.Seconds);
+            id = rand.Next();
+
             User = user;
             _TimePlaced = new DateTime();
             _pizzas = new List<Pizza>();
@@ -105,16 +112,18 @@ namespace PizzaStoreLibrary.library
 
         // Core Add pizza method that will be called
         //  on all variations of AddPizzaToOrder
-        public void AddPizzaToOrder(Pizza pizza)
+        public int AddPizzaToOrder(Pizza pizza)
         {
-            // TODO: Maybe let the user know they are
-            //  adding too many pizzas? Set up event/delegate
-            //  here to fire when too many pizzas are added!
-            if (PizzaList.Count == Utilities.MaxPizzasPerOrder || !Pizza.PizzaIsValid(pizza) || 
-                pizza.Cost + Cost > Utilities.MaxCostPerOrder)
-                return;
-
+            if (!Pizza.PizzaIsValid(pizza))
+                return -10;
+            if (PizzaList.Count == Utilities.MaxPizzasPerOrder)
+                return -3;
+            if (pizza.Cost + Cost > Utilities.MaxCostPerOrder)
+                return -1;
+            
+            pizza.Id = rand.Next();
             PizzaList.Add(pizza);
+            return 1;
         }
         // Adding new pizza using strings
         public void AddPizzaToOrder(params string[] ingredients)
@@ -133,22 +142,39 @@ namespace PizzaStoreLibrary.library
             SetOrderLocation(new Location(location));
         }
 
-        public bool IsValid()
+        public int IsValid()
         {
-            if (Location != null && PizzaList.Count > 0
-                && PizzaList.Count <= 12)
-                return true;
-
-            return false;
+            if (Location != null && PizzaList.Count > 0)
+            {
+                if (PizzaList.Count > 12)
+                    return -3;
+                return 1;
+            }
+            
+            return -10;
         }
-       
-        public void Display()
+
+        public void DisplayMax()
         {
             Console.WriteLine($"OrderId: {Id}");
             Console.WriteLine($"Total Cost: {Cost}");
             Console.WriteLine($"Location: {Location?.Name}");
             Console.WriteLine($"User: {User.FirstName} {User.LastName}");
             Console.WriteLine($"Time Placed: {TimePlaced}");
+            Console.WriteLine($"Pizzas: ({PizzaList.Count} total for this order)");
+            for (int i = 0; i < PizzaList.Count; i++)
+            {
+                Console.Write($"   ({i + 1}) ");
+                PizzaList[i].Display();
+            }
+        }
+        public void Display()
+        {
+            //Console.WriteLine($"OrderId: {Id}");
+            Console.WriteLine($"Total Cost: {Cost}");
+            //Console.WriteLine($"Location: {Location?.Name}");
+            //Console.WriteLine($"User: {User.FirstName} {User.LastName}");
+            //Console.WriteLine($"Time Placed: {TimePlaced}");
             Console.WriteLine($"Pizzas: ({PizzaList.Count} total for this order)");
             for (int i = 0; i < PizzaList.Count; i++)
             {

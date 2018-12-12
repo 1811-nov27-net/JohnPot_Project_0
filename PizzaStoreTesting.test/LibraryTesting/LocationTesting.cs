@@ -120,12 +120,12 @@ namespace PizzaStoreTesting.test
 
 
             // Act
-            bool orderSuccessfull = location.PlaceOrder(order1);
+            int orderSuccessfull = location.PlaceOrder(order1);
             int remainingInventory = location.Inventory.Sum(i => i.Value);
 
             // Assert
             Assert.Equal(expectedRemaing, remainingInventory);
-            Assert.True(expectedOrderPlaced == orderSuccessfull);
+            Assert.True(expectedOrderPlaced == orderSuccessfull>0);
         }
 
         #endregion
@@ -210,15 +210,15 @@ namespace PizzaStoreTesting.test
             order2.AddPizzaToOrder("Cheese");
 
             // Act
-            bool orderPlaced = location.PlaceOrder(order1);
+            int orderPlaced = location.PlaceOrder(order1);
             Order oldOrder = null;
-            if (orderPlaced)
+            if (orderPlaced>0)
             {
                 oldOrder = location.GetLastOrder();
             }
             orderPlaced = location.PlaceOrder(order2);
             oldOrder = null;
-            if (orderPlaced)
+            if (orderPlaced>0)
             {
                 oldOrder = location.GetLastOrder();
             }
@@ -254,7 +254,7 @@ namespace PizzaStoreTesting.test
             }
 
             // Act
-            bool orderPlaced = location.PlaceOrder(order1);
+            int orderPlaced = location.PlaceOrder(order1);
             Order order2 = location.SuggestOrder(user);
             
 
@@ -262,7 +262,7 @@ namespace PizzaStoreTesting.test
             if (order2 != null)
                 Assert.True((order1.Equals(order2)) == expected);
             else
-                Assert.True(orderPlaced == expected);
+                Assert.True(orderPlaced>0 == expected);
 
         }
 
@@ -298,14 +298,14 @@ namespace PizzaStoreTesting.test
                 o.AddPizzaToOrder(pizza);
                 orderList.Add(o);
             }
-            bool orderPlaced = false;
+            int orderPlaced = -1;
             // Place all the orders
             foreach (Order o in orderList)
             {
                 orderPlaced = location.PlaceOrder(o);
                 // Manually modify the order time
                 //  so we can place multiple
-                if(orderPlaced)
+                if(orderPlaced>0)
                 {
                     TimeSpan threeHours = new TimeSpan(3, 0, 0);
                     o.TimePlaced -= threeHours;
@@ -369,7 +369,7 @@ namespace PizzaStoreTesting.test
                 o.AddPizzaToOrder(pizza);
                 orderList.Add(o);
             }
-            bool orderPlaced = false;
+            int orderPlaced = -1;
 
             // Place all the orders for main user
             foreach (Order o in orderList)
@@ -377,7 +377,7 @@ namespace PizzaStoreTesting.test
                 orderPlaced = location.PlaceOrder(o);
                 // Manually modify the order time
                 //  so we can place multiple
-                if (orderPlaced)
+                if (orderPlaced>0)
                 {
                     TimeSpan threeHours = new TimeSpan(3, 0, 0);
                     o.TimePlaced -= threeHours;

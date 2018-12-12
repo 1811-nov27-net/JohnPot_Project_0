@@ -21,11 +21,13 @@ namespace PizzaStoreData.DataAccess
         public void Create(Inventory entity)
         {
             _db.Add(entity);
+            _db.SaveChanges();
         }
 
         public void Delete(Inventory entity)
         {
             _db.Remove(entity);
+            _db.SaveChanges();
         }
 
         public Inventory GetById(int id)
@@ -51,8 +53,9 @@ namespace PizzaStoreData.DataAccess
         public void Update(Inventory entity)
         {
             _db.Entry(_db.Inventory
-                .Find(entity.IngredientId))
+                .Find(entity.LocationId, entity.IngredientId))
                 .CurrentValues.SetValues(entity);
+            _db.SaveChanges();
         }
     }
 }

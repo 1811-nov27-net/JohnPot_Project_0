@@ -62,7 +62,31 @@ DROP TABLE PizzaStore.Inventory
 DROP TABLE PizzaStore.[Location]
 DROP TABLE PizzaStore.Ingredient
 
-INSERT INTO PizzaStore.User(FirstName, LastName)
-    VALUES('Default', 'Default')
 
 SELECT * FROM PizzaStore.[User]
+
+SELECT * FROM PizzaStore.[Location]
+
+SELECT * FROM PizzaStore.Inventory
+
+SELECT * FROM PizzaStore.Ingredient
+
+SELECT * FROM PizzaStore.[Order]
+
+SELECT * FROM PizzaStore.Pizza
+
+-- Base list of ingredients and prices
+INSERT INTO PizzaStore.Ingredient(Name, Cost)
+    VALUES('cheese', 0.5)
+INSERT INTO PizzaStore.Ingredient(Name, Cost)
+    VALUES('olive', 1.0)
+INSERT INTO PizzaStore.Ingredient(Name, Cost)
+    VALUES('pepperoni', 1.0)
+INSERT INTO PizzaStore.Ingredient(Name, Cost)
+    VALUES('pineapple', 2.5)
+INSERT INTO PizzaStore.Ingredient(Name, Cost)
+    VALUES('onion', 3.5)
+INSERT INTO PizzaStore.Ingredient(Name, Cost)
+    VALUES('sausage', 4)
+INSERT INTO PizzaStore.Ingredient(Name, Cost)
+    VALUES('bacon', 10)

@@ -21,11 +21,13 @@ namespace PizzaStoreData.DataAccess
         public void Create(Ingredient entity)
         {
             _db.Add(entity);
+            _db.SaveChanges();
         }
 
         public void Delete(Ingredient entity)
         {
             _db.Remove(entity);
+            _db.SaveChanges();
         }
 
         public Ingredient GetById(int id)
@@ -47,6 +49,7 @@ namespace PizzaStoreData.DataAccess
             _db.Entry(_db.Ingredient
                 .Find(entity.IngredientId))
                 .CurrentValues.SetValues(entity);
+            _db.SaveChanges();
         }
     }
 }

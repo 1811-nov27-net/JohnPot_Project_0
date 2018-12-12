@@ -21,6 +21,7 @@ namespace PizzaStoreData.DataAccess
         public void Create(User entity)
         {
             _db.Add(entity);
+            _db.SaveChanges();
         }
         public void Create(lib.User entity)
         {
@@ -30,6 +31,8 @@ namespace PizzaStoreData.DataAccess
                 LastName = entity.LastName
             };
             _db.Add(dbUser);
+            _db.SaveChanges();
+            entity.Id = dbUser.UserId;
         }
 
         public void Delete(User entity)
@@ -56,6 +59,7 @@ namespace PizzaStoreData.DataAccess
             _db.Entry(_db.User
                 .Find(entity.UserId))
                 .CurrentValues.SetValues(entity);
+            _db.SaveChanges();
         }
     }
 }

@@ -45,6 +45,10 @@ namespace PizzaStoreLibrary.library
         #endregion
 
         #region Methods
+        public bool HasIngredient(string ingredient)
+        {
+            return Inventory.ContainsKey(ingredient);
+        }
         public void StockInventory(KeyValuePair<string, int> ingredient)
         {
             // Use validation to remove 's' and insure
@@ -68,7 +72,7 @@ namespace PizzaStoreLibrary.library
                 StockInventory(ingredient);
             }
         }
-        public bool PlaceOrder(Order order)
+        public int PlaceOrder(Order order)
         {
             // Stop user from ordering from the same
             //  location before two hours has elapsed
@@ -78,12 +82,13 @@ namespace PizzaStoreLibrary.library
                 DateTime currentTime = DateTime.Now;
                 TimeSpan elapsedTime = currentTime.TimeOfDay - pastOrder.TimePlaced.TimeOfDay;
                 if (elapsedTime.Hours < 2)
-                    return false;
+                    return -1;
             }
 
             // Create a dictionary of all ingredients
             //  required to make this order
             Dictionary<string, int> ingredientList = new Dictionary<string, int>();
+
             foreach (Pizza pizza in order.PizzaList)
             {
                 foreach (string ingredient in pizza.Ingredients)
@@ -99,7 +104,7 @@ namespace PizzaStoreLibrary.library
             }
 
             if (!CheckInventoryForIngredient(ingredientList))
-                return false;
+                return -2;
 
             // Finialize the order by depleting ingredients
             //  from the inventory and setting the time
@@ -113,7 +118,7 @@ namespace PizzaStoreLibrary.library
             order.TimePlaced = DateTime.Now;
             OrderHistory.Push(order);
 
-            return true;
+            return 1;
         }
         public Order SuggestOrder(User user)
         {
@@ -164,6 +169,7 @@ namespace PizzaStoreLibrary.library
 
             if (Inventory.ContainsKey(validatedIngredient))
                 Inventory[validatedIngredient] -= ingredient.Value;
+            
         }
         private bool CheckInventoryForIngredient(Dictionary<string, int> ingredientList)
         {
@@ -184,7 +190,7 @@ namespace PizzaStoreLibrary.library
         }
         private bool CheckInventoryForIngredient(string ingredient, int quantity)
         {
-            string validatedIngredient = Pizza.ValidateIngredient(ingredient);
+            string validatedIngredient = Pizza.ValidateIngredient(ingredient).ToLower();
 
             if (validatedIngredient != Pizza.InvalidIngredient && 
                 Inventory.ContainsKey(ingredient))
